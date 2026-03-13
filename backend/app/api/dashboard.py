@@ -18,6 +18,8 @@ from app.models import CitizenReport, Intervention, User, Ward, WardIndicator
 from app.schemas import (
     AIComponentStatus,
     AuditTrailItem,
+    ConsultRequest,
+    ConsultResponse,
     InterAgencyPacket,
     InterAgencyTask,
     LiveIngestRequest,
@@ -51,7 +53,12 @@ from app.schemas import (
 from app.services.audit import list_audit_events, log_audit_event
 from app.services.model_hub import MODEL_HUB
 from app.services.public_data import fetch_open_meteo_current
-from app.services.scenario import build_counterfactuals, predict_budget_allocation, simulate_policy_scenario
+from app.services.rag_service import RAG_SERVICE
+from app.services.scenario import (
+    build_counterfactuals,
+    predict_budget_allocation,
+    simulate_policy_scenario,
+)
 from app.services.ward_metrics import (
     estimate_blocked_network_scale,
     estimate_exposed_population,
@@ -2535,3 +2542,203 @@ def ai_budget_plan(
         details={"budget_lakh": budget_lakh, "top_sector": result["top_sector"]},
     )
     return result
+
+
+@router.post("/wards/{ward_id}/consult", response_model=ConsultResponse)
+async def consult_ward_scenario(
+    ward_id: int,
+    req: ConsultRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> ConsultResponse:
+    """AI Counselor: Translates vision into weights and runs simulation."""
+    # Pre-defined deterministic responses for the frontend dropdown choices
+    # This ensures 100% reliable and instantaneous results without relying on the LLM.
+    preset_mappings = {
+        "Tackle flood risks and improve drainage": {
+            "weights": {"impact_per_lakh": 0.1, "equity_need": 0.2, "urgency": 0.35, "feasibility": 0.1, "beneficiary_norm": 0.15, "prior_rank_norm": 0.05, "readiness_norm": 0.05},
+            "sector_priorities": {"Drainage": 1.0, "Water": 0.5, "Waste": 0.6, "Road": 0.4, "Green": 0.3, "Public Safety": 0.4},
+            "sector_rationales": {"Drainage": "Directly prioritised by user to tackle flood risks and protect vulnerable households."},
+            "reasoning": "Weighted heavily towards urgency and drainage to address flood risks.",
+        },
+        "Expand green spaces and reduce urban heat": {
+            "weights": {"impact_per_lakh": 0.15, "equity_need": 0.15, "urgency": 0.1, "feasibility": 0.2, "beneficiary_norm": 0.2, "prior_rank_norm": 0.1, "readiness_norm": 0.1},
+            "sector_priorities": {"Drainage": 0.4, "Water": 0.5, "Waste": 0.4, "Road": 0.3, "Green": 1.0, "Public Safety": 0.4},
+            "sector_rationales": {"Green": "Directly prioritised by user to expand tree cover and mitigate urban heat effects."},
+            "reasoning": "Weighted to focus on feasibility and beneficiary reach for green infrastructure.",
+        },
+        "Improve solid waste management": {
+            "weights": {"impact_per_lakh": 0.2, "equity_need": 0.2, "urgency": 0.2, "feasibility": 0.15, "beneficiary_norm": 0.15, "prior_rank_norm": 0.05, "readiness_norm": 0.05},
+            "sector_priorities": {"Drainage": 0.6, "Water": 0.4, "Waste": 1.0, "Road": 0.4, "Green": 0.4, "Public Safety": 0.4},
+            "sector_rationales": {"Waste": "Directly prioritised by user to reduce disease vectors and clear waste backlogs."},
+            "reasoning": "Balanced weights with a strong sector push towards solid waste management.",
+        },
+        "Ensure clean water access": {
+            "weights": {"impact_per_lakh": 0.2, "equity_need": 0.3, "urgency": 0.2, "feasibility": 0.1, "beneficiary_norm": 0.1, "prior_rank_norm": 0.05, "readiness_norm": 0.05},
+            "sector_priorities": {"Drainage": 0.4, "Water": 1.0, "Waste": 0.4, "Road": 0.3, "Green": 0.3, "Public Safety": 0.4},
+            "sector_rationales": {"Water": "Directly prioritised by user to secure safe and continuous water access."},
+            "reasoning": "Weighted heavily towards equity to ensure informal areas receive water infrastructure.",
+        },
+        "Repair and expand road networks": {
+            "weights": {"impact_per_lakh": 0.25, "equity_need": 0.1, "urgency": 0.1, "feasibility": 0.2, "beneficiary_norm": 0.15, "prior_rank_norm": 0.1, "readiness_norm": 0.1},
+            "sector_priorities": {"Drainage": 0.5, "Water": 0.4, "Waste": 0.4, "Road": 1.0, "Green": 0.3, "Public Safety": 0.5},
+            "sector_rationales": {"Road": "Directly prioritised by user to improve connectivity and infrastructure gap."},
+            "reasoning": "Weighted for maximum economic impact and feasibility of civil works.",
+        },
+        "Enhance public safety and lighting": {
+            "weights": {"impact_per_lakh": 0.15, "equity_need": 0.25, "urgency": 0.2, "feasibility": 0.15, "beneficiary_norm": 0.1, "prior_rank_norm": 0.05, "readiness_norm": 0.1},
+            "sector_priorities": {"Drainage": 0.4, "Water": 0.4, "Waste": 0.4, "Road": 0.5, "Green": 0.4, "Public Safety": 1.0},
+            "sector_rationales": {"Public Safety": "Directly prioritised by user to improve community safety and street lighting."},
+            "reasoning": "Weighted for equity and urgency to address immediate community safety needs.",
+        },
+        "Provide a balanced, data-driven approach": {
+             "weights": {"impact_per_lakh": 0.2, "equity_need": 0.2, "urgency": 0.2, "feasibility": 0.1, "beneficiary_norm": 0.1, "prior_rank_norm": 0.1, "readiness_norm": 0.1},
+             "sector_priorities": {},
+             "sector_rationales": {},
+             "reasoning": "Baseline data-driven approach. Budget is allocated strictly according to empirical ward indicators.",
+        }
+    }
+
+    if req.sector_priorities is not None:
+        # Questionnaire mode
+        sector_priorities = req.sector_priorities
+        custom_weights = {"impact_per_lakh": 0.2, "equity_need": 0.2, "urgency": 0.2, "feasibility": 0.1, "beneficiary_norm": 0.1, "prior_rank_norm": 0.1, "readiness_norm": 0.1}
+        
+        sector_rationales = {}
+        if sector_priorities.get("Drainage", 0) > 0.1:
+            sector_rationales["Drainage"] = "High drain blockage and flood exposure demand urgent drainage investment."
+        if sector_priorities.get("Green", 0) > 0.1:
+            sector_rationales["Green"] = "Green deficit index signals a shortfall in tree cover and open public space."
+        if sector_priorities.get("Waste", 0) > 0.1:
+            sector_rationales["Waste"] = "Dense informal housing correlates with solid waste management deficits."
+        if sector_priorities.get("Water", 0) > 0.1:
+            sector_rationales["Water"] = "Informal settlements and exposed population indicate acute water access gaps."
+        if sector_priorities.get("Road", 0) > 0.1:
+            sector_rationales["Road"] = "Infrastructure gap between household density and road coverage requires repair."
+        if sector_priorities.get("Public Safety", 0) > 0.1:
+            sector_rationales["Public Safety"] = "Baseline equity and community safety needs justify a minimum safety allocation."
+            
+        reasoning = "Custom questionnaire-driven priorities."
+    elif req.vision in preset_mappings:
+        mapping = preset_mappings[req.vision]
+        custom_weights = mapping.get("weights", {})
+        sector_priorities = mapping.get("sector_priorities", {})
+        sector_rationales = mapping.get("sector_rationales", {})
+        reasoning = mapping.get("reasoning", "")
+    else:
+        # Fallback to LLM if the frontend text was altered or free-typed
+        consultation = await RAG_SERVICE.consult_scenario(req.vision)
+        custom_weights = consultation.get("weights", {})
+        sector_priorities = consultation.get("sector_priorities", {})
+        sector_rationales = consultation.get("sector_rationales", {})
+        reasoning = consultation.get("reasoning", "AI-optimized weights based on user vision.")
+
+    # 2. Get candidate projects
+    top_list = top_worklist(ward_id=ward_id, top_n=30, db=db, _=current_user, _emit_audit=False)
+    item_dicts = [item.model_dump() for item in top_list.items]
+
+    if not item_dicts:
+        raise HTTPException(status_code=404, detail="No candidate projects found for simulation.")
+
+    # 3. Handle budget plan results (sector distribution)
+    # Re-use logic from ai_budget_plan to prepare indicators
+    ward = db.scalar(select(Ward).where(Ward.id == ward_id))
+    indicator = db.scalar(select(WardIndicator).where(WardIndicator.ward_id == ward_id))
+    
+    # Defaults in case DB records are missing (fallback)
+    house_count = 0
+    road_count = 0
+    if ward_id:
+        try:
+            map_layers = _load_json_file("ward_map_layers.json")
+            layer_payload = map_layers.get(str(ward_id), {})
+            if isinstance(layer_payload, dict):
+                summary = layer_payload.get("summary", {})
+                if isinstance(summary, dict):
+                    house_count = int(summary.get("houses", 0))
+                    road_count = int(summary.get("roads", 0))
+        except:
+            pass
+
+    if indicator:
+        indicators_dict = {
+            "blocked_drain_count":  float(indicator.blocked_drain_count),
+            "flood_exposure_pct":   float(indicator.flood_risk_index) * 100.0,
+            "exposed_population":   float(indicator.exposed_population),
+            "total_population":     float(ward.population) if (ward and ward.population) else float(indicator.exposed_population),
+            "informal_area_pct":    float(indicator.informal_area_pct),
+            "green_deficit_index":  float(indicator.green_deficit_index),
+            "road_length_km":       max(float(road_count) * 0.08, 0.1),
+            "house_count":          float(house_count),
+            "equity_score":         float(indicator.sdg11_score) / 10.0 if indicator.sdg11_score else 0.5,
+        }
+    else:
+        # Emergency fallback
+        indicators_dict = {
+            "blocked_drain_count": 0.0, "flood_exposure_pct": 20.0, "exposed_population": 1000.0,
+            "total_population": 5000.0, "informal_area_pct": 10.0, "green_deficit_index": 0.5,
+            "road_length_km": 1.0, "house_count": 500.0, "equity_score": 0.5
+        }
+
+    budget_plan = predict_budget_allocation(
+        indicators_dict, 
+        req.budget_lakh, 
+        sector_priorities=sector_priorities,
+        sector_rationales=sector_rationales
+    )
+
+    # 4. Run simulation with custom weights
+    sim = simulate_policy_scenario(
+        item_dicts, req.budget_lakh, strategy="custom", custom_weights=custom_weights
+    )
+    selected_dicts = sim["selected_projects"]
+    counterfactuals = build_counterfactuals(
+        item_dicts, req.budget_lakh, strategy="balanced", custom_weights=custom_weights
+    )
+
+    result = ScenarioResult(
+        ward_id=ward_id,
+        budget_lakh=req.budget_lakh,
+        strategy_profile=str(sim["strategy_profile"]),
+        strategy_label=str(sim["strategy_label"]),
+        strategy_description=str(sim["strategy_description"]),
+        selected_projects=[TopWorkItem(**item) for item in selected_dicts],
+        used_budget_lakh=float(sim["used_budget_lakh"]),
+        remaining_budget_lakh=float(sim["remaining_budget_lakh"]),
+        impacted_households=int(sim["impacted_households"]),
+        estimated_sdg11_gain=float(sim["estimated_sdg11_gain"]),
+        selection_method=str(sim["selection_method"]),
+        decision_basis={
+            **sim["decision_basis"],
+            "budget_lakh": float(req.budget_lakh),
+            "vision": req.vision,
+        },
+        portfolio_summary=sim["portfolio_summary"],
+        selected_reasoning=sim["selected_reasoning"],
+        agency_load=sim["agency_load"],
+        implementation_roadmap=sim["implementation_roadmap"],
+        tradeoff_alerts=sim["tradeoff_alerts"],
+        deferred_projects=sim["deferred_projects"],
+        counterfactuals=counterfactuals,
+        strategy_comparison=sim["strategy_comparison"],
+    )
+
+    log_audit_event(
+        db,
+        action="scenario_consulted",
+        user=current_user,
+        ward_id=ward_id,
+        details={
+            "vision": req.vision[:100],
+            "budget_lakh": req.budget_lakh,
+            "weights": custom_weights,
+        },
+    )
+
+    return ConsultResponse(
+        vision=req.vision,
+        weights=custom_weights,
+        reasoning=reasoning,
+        result=result,
+        budget_plan=budget_plan,
+    )

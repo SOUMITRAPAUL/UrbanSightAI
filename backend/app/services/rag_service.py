@@ -184,8 +184,8 @@ class RAGService:
         # Return the highest score intent
         return max(scores, key=scores.get)
 
-    async def chat(self, query: str, ward_context: str | None = None) -> dict[str, Any]:
-        intent = self.classify_intent(query)
+    async def chat(self, query: str, ward_context: str | None = None, chat_mode: str | None = None) -> dict[str, Any]:
+        intent = chat_mode if chat_mode else self.classify_intent(query)
         sources = self.hybrid_retrieve(query)
         
         if not sources and not ward_context:
@@ -204,7 +204,7 @@ class RAGService:
         
         if intent == "CITIZEN_COMPLAINT":
             role_desc = "UrbanSightAI Citizen Support Liaison"
-            rule_set += " Acknowledge the citizen's concern and explain how UrbanSightAI's spatial model handles such reports."
+            rule_set += " Acknowledge the citizen's concern. MOST IMPORTANTLY, based on the context provided, propose a SPECIFIC SOLUTION or actionable next step the city should take to fix the reported issue."
         elif intent == "PLANNER_ADVICE":
             role_desc = "UrbanSightAI Policy Consultant"
             rule_set += " Provide professional budget and strategy recommendations based on the data."
@@ -252,6 +252,123 @@ RULES:
             return {"answer": answer, "sources": sources, "intent": intent}
         except Exception as e:
             return {"answer": f"System Busy: {str(e)}", "sources": sources}
+
+    async def consult_scenario(self, vision: str) -> dict[str, Any]:
+        """Translates a planning vision into specific simulation weights using LLM."""
+        prompt = f"""<|system|>
+You are a Senior Urban Planner for Bangladesh. Your task is to translate a user's strategic "Vision" into technical simulation weights.
+The weights will control an AI Policy Ranker.
+
+AVAILABLE WEIGHTS (0.0 to 0.4 each):
+- "impact_per_lakh": Focus on cost-efficiency and maximum ROI.
+- "equity_need": Focus on low-income, informal, and underserved populations.
+- "urgency": Focus on immediate safety, flood response, and critical crises.
+- "feasibility": Focus on projects with high technical success probability.
+- "beneficiary_norm": Focus on reaching the highest absolute number of residents.
+- "prior_rank_norm": Stability; bias towards existing high-ranked evidence.
+- "readiness_norm": Bias towards "shovel-ready" projects with minimal permits needed.
+
+AVAILABLE SECTORS:
+- "Drainage": Flood safety, canals, drain blockage.
+- "Water": Clean water access, informal settlement supply.
+- "Waste": Solid waste management, cleanliness.
+- "Road": Connectivity, repair, emergency access.
+- "Green": Tree cover, parks, urban heat reduction.
+- "Public Safety": Street lighting, community safety.
+
+RULES:
+1. Return ONLY a raw JSON object. 
+2. NO markdown backticks. NO introductory text. NO commentary.
+3. "weights" must sum to 1.0 (controlling project selection).
+4. "sector_priorities" must be 0.0 to 1.0 for EACH of the 6 sectors (controlling budget distribution).
+5. "sector_rationales" must provide a brief, vision-aligned reason for each sector's priority (max 100 chars each).
+6. Include a global "reasoning" field.
+
+Example Input: "Help poor people during floods now!"
+Example Output:
+{{
+  "weights": {{"impact_per_lakh": 0.1, "equity_need": 0.35, "urgency": 0.3, "feasibility": 0.05, "beneficiary_norm": 0.1, "prior_rank_norm": 0.05, "readiness_norm": 0.05}},
+  "sector_priorities": {{"Drainage": 0.9, "Water": 0.5, "Waste": 0.4, "Road": 0.2, "Green": 0.3, "Public Safety": 0.2}},
+  "sector_rationales": {{
+    "Drainage": "Directly tackles flood risks for vulnerable households as requested.",
+    "Water": "Essential for informal areas prone to flooding and water shortages.",
+    "Waste": "Reduces drain blockage which is critical for monsoon readiness.",
+    "Road": "Minimal priority unless needed for emergency rescue access.",
+    "Green": "Secondary focus; prioritised for local climate cooling.",
+    "Public Safety": "Maintained at baseline unless safety issues arise."
+  }},
+  "reasoning": "Weighted heavily for equity and urgency to tackle flood response in high-need wards."
+}}
+</s>
+<|user|>
+Vision: "{vision}"
+Respond with JSON ONLY.
+</s>
+<|assistant|>
+{{
+"""
+        url = f"{OLLAMA_BASE_URL}/api/generate"
+        payload = {
+            "model": OLLAMA_MODEL,
+            "prompt": prompt,
+            "stream": False,
+            "options": {
+                "temperature": 0.0,
+                "num_predict": 300,
+                "stop": ["</s>", "<|user|>", "<|system|>"]
+            }
+        }
+
+        try:
+            print(f"Consultation Request ({OLLAMA_MODEL}) | Vision: {vision[:40]}...")
+            response = requests.post(url, json=payload, timeout=40)
+            response.raise_for_status()
+            raw_text = response.json().get("response", "").strip()
+            # 1. Clear common markdown and conversational fluff
+            raw_text = re.sub(r'```(?:json)?', '', raw_text).strip()
+            raw_text = re.sub(r'^.*?(\{)', r'\1', raw_text, flags=re.DOTALL) # Strip leading text
+            
+            # 2. Try to find the first complete JSON object
+            match = re.search(r"(\{.*\})", raw_text, re.DOTALL)
+            if match:
+                try:
+                    # Pre-fix the leading '{' we might have added in prompt if needed
+                    text_to_parse = match.group(1)
+                    if not text_to_parse.startswith("{"):
+                        text_to_parse = "{" + text_to_parse
+                    return json.loads(text_to_parse)
+                except json.JSONDecodeError:
+                    pass
+            
+            # 3. Fallback: return balanced weights instead of crashing
+            balanced_weights = {
+                "impact_per_lakh": 0.2, "equity_need": 0.2, "urgency": 0.2,
+                "feasibility": 0.1, "beneficiary_norm": 0.1,
+                "prior_rank_norm": 0.1, "readiness_norm": 0.1
+            }
+            default_priorities = {s: 0.5 for s in ["Drainage", "Water", "Waste", "Road", "Green", "Public Safety"]}
+            
+            print(f"LLM Response not parseable. Content: {raw_text[:100]}")
+            return {
+                "weights": balanced_weights,
+                "sector_priorities": default_priorities,
+                "sector_rationales": {s: "Balanced priority based on ward baseline indicators." for s in default_priorities},
+                "reasoning": "Fallback to balanced weights due to parsing error."
+            }
+        except Exception as e:
+            raw_info = locals().get("raw_text", "No response")
+            print(f"Consultation Parse Error: {e} | Raw: {raw_info[:100]}")
+            default_priorities = {s: 0.5 for s in ["Drainage", "Water", "Waste", "Road", "Green", "Public Safety"]}
+            return {
+                "weights": {
+                    "impact_per_lakh": 0.2, "equity_need": 0.2, "urgency": 0.2,
+                    "feasibility": 0.1, "beneficiary_norm": 0.1,
+                    "prior_rank_norm": 0.1, "readiness_norm": 0.1
+                },
+                "sector_priorities": default_priorities,
+                "sector_rationales": {s: "Balanced priority due to system timeout or error." for s in default_priorities},
+                "reasoning": f"Fallback to balanced weights due to parsing error: {str(e)}"
+            }
 
 RAG_SERVICE = RAGService()
 RAG_SERVICE.load_knowledge()

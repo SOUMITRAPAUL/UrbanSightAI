@@ -1,14 +1,16 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Literal
+from typing import Literal, Any
 
 from pydantic import BaseModel, Field
 
 
 Role = Literal["planner", "enumerator", "viewer"]
 Severity = Literal["low", "medium", "high", "critical"]
-PlanningStrategy = Literal["balanced", "climate_resilience", "equity_first", "fast_delivery"]
+PlanningStrategy = Literal[
+    "balanced", "climate_resilience", "equity_first", "fast_delivery", "custom"
+]
 
 
 class UserRegister(BaseModel):
@@ -445,7 +447,20 @@ class LiveUpdateResponse(BaseModel):
 class ChatRequest(BaseModel):
     query: str = Field(min_length=3, max_length=500)
     ward_id: int | None = None
+    chat_mode: str | None = None
 
 class ChatResponse(BaseModel):
     answer: str
     sources: list[str]
+
+class ConsultRequest(BaseModel):
+    vision: str | None = Field(default=None, max_length=500)
+    budget_lakh: float = Field(default=8.0, gt=0.4, le=100.0)
+    sector_priorities: dict[str, float] | None = None
+
+class ConsultResponse(BaseModel):
+    vision: str
+    weights: dict[str, float]
+    reasoning: str
+    result: ScenarioResult
+    budget_plan: dict[str, Any]

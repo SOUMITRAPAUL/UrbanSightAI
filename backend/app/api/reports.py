@@ -56,7 +56,7 @@ async def chat_with_rag(
             except:
                 pass
 
-    response = await RAG_SERVICE.chat(payload.query, ward_context=ward_context)
+    response = await RAG_SERVICE.chat(payload.query, ward_context=ward_context, chat_mode=payload.chat_mode)
     log_audit_event(
         db,
         action="chatbot_rag_query",

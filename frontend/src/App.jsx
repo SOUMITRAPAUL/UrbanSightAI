@@ -53,21 +53,25 @@ const PLANNING_STRATEGIES = [
     id: 'balanced',
     label: 'Balanced',
     description: 'Steady portfolio across impact, equity, urgency, and readiness.',
+    weights: { impact: 26, equity: 18, urgency: 16, feasibility: 12, readiness: 10 }
   },
   {
     id: 'climate_resilience',
     label: 'Climate',
     description: 'Favors flood, drainage, water, and green resilience actions.',
+    weights: { impact: 22, equity: 14, urgency: 20, feasibility: 10, readiness: 18 }
   },
   {
     id: 'equity_first',
     label: 'Equity',
     description: 'Pushes high-need, high-beneficiary work to the front.',
+    weights: { impact: 18, equity: 30, urgency: 14, feasibility: 8, readiness: 8 }
   },
   {
     id: 'fast_delivery',
     label: 'Fast Delivery',
     description: 'Biases toward permit-light, ready-to-move projects.',
+    weights: { impact: 20, equity: 12, urgency: 18, feasibility: 18, readiness: 18 }
   },
 ]
 
@@ -110,6 +114,7 @@ function App() {
   const [reportText, setReportText] = useState('')
   const [chatHistory, setChatHistory] = useState([])
   const [isChatting, setIsChatting] = useState(false)
+  const [chatMode, setChatMode] = useState('CITIZEN_COMPLAINT')
   const chatScrollRef = useRef(null)
   const [odkForm, setOdkForm] = useState({
     text: '',
@@ -122,6 +127,17 @@ function App() {
   const [error, setError] = useState('')
   const [info, setInfo] = useState('')
   const [loading, startLoading] = useTransition()
+  const [visionInput, setVisionInput] = useState('Tackle flood risks and improve drainage')
+  const [questionnaire, setQuestionnaire] = useState({
+    Drainage: 0,
+    Green: 0,
+    Waste: 0,
+    Water: 0,
+    Road: 0,
+    "Public Safety": 0,
+  })
+  const [isConsulting, setIsConsulting] = useState(false)
+  const [consultationResults, setConsultationResults] = useState(null)
   const deferredReportText = useDeferredValue(reportText)
 
   const authedHeaders = token
@@ -284,7 +300,8 @@ function App() {
         method: 'POST',
         body: JSON.stringify({ 
           query,
-          ward_id: selectedWard // Inject live ward context
+          ward_id: selectedWard, // Inject live ward context
+          chat_mode: chatMode // Send the explicit intent
         }),
       })
       const aiMsg = { 
@@ -385,6 +402,33 @@ function App() {
       setError(String(err.message || err))
     } finally {
       setIsPredicting(false)
+    }
+  }
+
+  async function handleConsultation() {
+    if (!visionInput.trim() || !selectedWard) return
+    setIsConsulting(true)
+    setError('')
+    try {
+      const res = await request(`/api/wards/${selectedWard}/consult`, {
+        method: 'POST',
+        body: JSON.stringify({
+          vision: "Questionnaire Output",
+          budget_lakh: budget,
+          sector_priorities: questionnaire
+        })
+      })
+      setScenario(res.result)
+      setConsultationResults({
+        weights: res.weights,
+        reasoning: res.reasoning,
+        budget_plan: res.budget_plan
+      })
+      setInfo('AI Planner has interpreted your vision and simulated outcomes.')
+    } catch (err) {
+      setError(String(err.message || err))
+    } finally {
+      setIsConsulting(false)
     }
   }
 
@@ -745,17 +789,36 @@ function App() {
             ))}
             {isChatting && <div className="chat-bubble ai pulse">AI is thinking...</div>}
           </div>
-          <div className="chat-input-row">
-            <textarea
-              rows="1"
-              placeholder="Ask for policy advice, reporting an issue, or ward stats..."
-              value={reportText}
-              onChange={(event) => setReportText(event.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleChatQuery(); } }}
-            />
-            <button disabled={isChatting} onClick={handleChatQuery}>
-              {isChatting ? 'Searching...' : 'Ask AI'}
-            </button>
+          <div className="chat-input-row" style={{flexDirection: 'column', alignItems: 'stretch', gap: '0.75rem'}}>
+            <select
+              value={chatMode}
+              onChange={(e) => setChatMode(e.target.value)}
+              style={{
+                width: '100%',
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '8px',
+                padding: '0.5rem',
+                color: '#eee',
+                fontSize: '0.85rem',
+              }}
+            >
+              <option style={{color:'#000'}} value="CITIZEN_COMPLAINT">🚨 Report an Issue</option>
+              <option style={{color:'#000'}} value="PLANNER_ADVICE">📊 Ask for Policy Advice</option>
+            </select>
+            <div style={{display: 'flex', gap: '0.5rem', width: '100%'}}>
+              <textarea
+                style={{flex: 1}}
+                rows="1"
+                placeholder={chatMode === 'CITIZEN_COMPLAINT' ? "Describe the issue..." : "Ask for strategic or budget advice..."}
+                value={reportText}
+                onChange={(event) => setReportText(event.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleChatQuery(); } }}
+              />
+              <button disabled={isChatting} onClick={handleChatQuery}>
+                {isChatting ? 'Searching...' : 'Ask AI'}
+              </button>
+            </div>
           </div>
           {classified && (
             <div className="prediction" style={{fontSize: '0.75rem', marginTop: '0.5rem'}}>
@@ -961,38 +1024,59 @@ function App() {
         <>
           {/* ─── Budget Input Panel ─── */}
           <section className="content-grid">
-            <article className="panel budget-input-panel">
+            <article className="panel consulting-panel">
               <div className="prescriptive-head">
-                <h3>🤖 AI Budget Sector Allocator</h3>
+                <h3>🩺 AI Scenario Consultant</h3>
                 <p className="prescriptive-tagline">
-                  Enter your total ward budget and the AI will analyse live ward indicators — flood risk,
-                  drain blockage, green deficit, informal settlement density — to predict the optimal
-                  spending distribution across all 6 urban service sectors.
+                  Choose your strategic priority. AI will compute the optimal simulation weights and budget distribution.
                 </p>
               </div>
-              <div className="budget-input-row">
-                <div className="budget-input-wrap">
-                  <span className="budget-currency">BDT</span>
-                  <input
-                    id="budget-amount-input"
-                    type="number"
-                    className="budget-input-big"
-                    min="1"
-                    max="5000"
-                    step="0.5"
-                    value={budgetInput}
-                    onChange={(e) => setBudgetInput(Number(e.target.value))}
-                    onKeyDown={(e) => { if (e.key === 'Enter') runAiBudgetPlan() }}
-                  />
-                  <span className="budget-unit">lakh</span>
+              <div className="consult-form" style={{marginTop:'1.25rem'}}>
+                <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(250px, 1fr))', gap:'1rem', marginBottom:'1.5rem'}}>
+                  {[
+                    { id: 'Drainage', label: '1️⃣ How severe is waterlogging and drain blockage?', options: ['None (0)', 'Low (0.25)', 'Moderate (0.5)', 'High (0.75)', 'Severe (1.0)'] },
+                    { id: 'Green', label: '2️⃣ How would you rate the lack of green spaces/parks?', options: ['Excellent (0)', 'Good (0.25)', 'Average (0.5)', 'Poor (0.75)', 'Very Poor (1.0)'] },
+                    { id: 'Waste', label: '3️⃣ How severe are the solid waste management issues?', options: ['None (0)', 'Low (0.25)', 'Moderate (0.5)', 'High (0.75)', 'Severe (1.0)'] },
+                    { id: 'Water', label: '4️⃣ How frequent are water shortages or unsafe supply?', options: ['Never (0)', 'Rarely (0.25)', 'Sometimes (0.5)', 'Often (0.75)', 'Always (1.0)'] },
+                    { id: 'Road', label: '5️⃣ How poor is the road condition and connectivity?', options: ['Excellent (0)', 'Good (0.25)', 'Average (0.5)', 'Poor (0.75)', 'Very Poor (1.0)'] },
+                    { id: 'Public Safety', label: '6️⃣ How severe are safety issues (lack of lights, crime)?', options: ['None (0)', 'Low (0.25)', 'Moderate (0.5)', 'High (0.75)', 'Severe (1.0)'] },
+                  ].map(q => (
+                    <div key={q.id} className="q-box" style={{background:'rgba(255,255,255,0.03)', padding:'0.75rem', borderRadius:'6px', border:'1px solid rgba(255,255,255,0.1)'}}>
+                      <label style={{display:'block', fontSize:'0.82rem', marginBottom:'0.5rem', fontWeight:600}}>{q.label}</label>
+                      <select 
+                         value={questionnaire[q.id]}
+                         onChange={e => setQuestionnaire({...questionnaire, [q.id]: parseFloat(e.target.value)})}
+                         style={{width:'100%', padding:'0.4rem', borderRadius:'4px', background:'rgba(0,0,0,0.2)', color:'#fff', border:'1px solid rgba(255,255,255,0.2)'}}
+                      >
+                        <option style={{color:'#000'}} value={0}>{q.options[0]}</option>
+                        <option style={{color:'#000'}} value={0.25}>{q.options[1]}</option>
+                        <option style={{color:'#000'}} value={0.5}>{q.options[2]}</option>
+                        <option style={{color:'#000'}} value={0.75}>{q.options[3]}</option>
+                        <option style={{color:'#000'}} value={1.0}>{q.options[4]}</option>
+                      </select>
+                    </div>
+                  ))}
                 </div>
-                <button
-                  className="predict-btn"
-                  onClick={runAiBudgetPlan}
-                  disabled={isPredicting}
-                >
-                  {isPredicting ? '🔄 AI Predicting...' : '✨ Predict Optimal Allocation →'}
-                </button>
+                <div style={{display:'flex', gap:'1rem', alignItems:'flex-end'}}>
+                  <div style={{flex: 1}}>
+                    <label style={{fontSize:'0.75rem', opacity:0.7, marginBottom:'0.25rem', display:'block'}}>Simulated Budget (Lakh)</label>
+                    <input
+                      type="number"
+                      className="budget-input-big"
+                      style={{height:'42px', fontSize:'1.1rem'}}
+                      value={budget}
+                      onChange={(e) => setBudget(Number(e.target.value))}
+                    />
+                  </div>
+                  <button
+                    className="predict-btn"
+                    style={{height:'42px', flex: 2, justifyContent:'center'}}
+                    onClick={handleConsultation}
+                    disabled={isConsulting || !visionInput.trim()}
+                  >
+                    {isConsulting ? '🧠 Consulting AI...' : '✨ Generate Scenario →'}
+                  </button>
+                </div>
               </div>
             </article>
 
@@ -1096,34 +1180,73 @@ function App() {
             </section>
           )}
 
-          {/* ─── Legacy Roadmap (kept if old scenario run exists) ─── */}
+          {/* ─── AI Policy Portfolio & Comparison ─── */}
           {scenario && (
             <section className="content-grid">
               <article className="panel">
-                <h3>🗓️ Agency Execution Roadmap</h3>
-                <div className="roadmap-list">
-                  {(scenario?.implementation_roadmap ?? []).slice(0, 6).map((step) => (
-                    <article key={step.intervention_id} className="roadmap-item">
-                      <div className="workflow-stage-head">
-                        <strong>{step.title}</strong>
-                        <span className={`sev ${step.delivery_status}`}>{step.phase}</span>
-                      </div>
-                      <p className="roadmap-meta">
-                        {step.agency} | Month {step.start_month} → {step.end_month}
-                      </p>
-                    </article>
-                  ))}
+                <div className="prescriptive-head">
+                  <h3>🏛️ AI Budget Sector Distribution (Interactive Prediction)</h3>
+                  <p className="prescriptive-tagline">
+                    Based on your BDT {budget} lakh budget and questionnaire answers,
+                    the AI has prioritised {scenario.selected_projects.length} interventions.
+                  </p>
                 </div>
+
+                {consultationResults?.budget_plan && (
+                  <div className="subpanel" style={{ border: '1px solid rgba(100,200,255,0.15)', padding: '1.25rem', borderRadius: '10px', background: 'rgba(100,200,255,0.03)' }}>
+                    <div style={{fontFamily: 'monospace', whiteSpace: 'pre-wrap', lineHeight: '1.6', fontSize: '0.9rem', color: '#e2e8f0'}}>
+                      <div style={{fontWeight: 'bold', marginBottom: '0.5rem', color: '#fff'}}>
+                        II. AI Budget Sector Distribution (Interactive Prediction)
+                      </div>
+                      {consultationResults.budget_plan.sectors.map((sector) => (
+                        <div key={sector.name} style={{marginBottom: '0.5rem'}}>
+                          <div>- {sector.name}: {sector.allocation_pct}% ({sector.allocation_lakh.toFixed(2)} lakh)</div>
+                          {sector.rationale && (
+                            <div style={{paddingLeft: '1rem', fontStyle: 'italic', opacity: 0.9}}>
+                              Rationale: {sector.rationale}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="ai-summary-card" style={{marginTop:'1.25rem', background:'rgba(255,255,255,0.03)', border:'none', padding: '0.75rem'}}>
+                      <p className="ai-summary-text" style={{fontSize:'0.85rem', opacity:0.9, lineHeight: 1.5}}>{consultationResults.budget_plan.ai_summary}</p>
+                    </div>
+                  </div>
+                )}
               </article>
+
               <article className="panel">
-                <h3>⚡ Tradeoff Alerts</h3>
+                <h3>⚖️ Trade-off Alerts & Insights</h3>
                 <div className="alert-list">
                   {(scenario.tradeoff_alerts ?? []).map((alert, index) => (
                     <div key={`${alert.topic}-${index}`} className={`alert-item ${alert.severity}`}>
-                      <strong>{alert.topic}</strong>
+                      <div className="alert-head" style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                        <strong>{alert.topic}</strong>
+                        <span className={`sev ${alert.severity}`} style={{fontSize:'0.65rem',padding:'0.1rem 0.4rem'}}>{alert.severity}</span>
+                      </div>
                       <p>{alert.message}</p>
                     </div>
                   ))}
+                </div>
+
+                <div className="insight-grid">
+                  <div className={`insight-card ${scenario.portfolio_summary.delivery_risk === 'low' ? 'positive' : 'warning'}`}>
+                    <h5>Delivery Risk</h5>
+                    <p>
+                      The current profile has a <strong>{scenario.portfolio_summary.delivery_risk}</strong> risk score.
+                      {scenario.portfolio_summary.delivery_risk === 'low' 
+                        ? ' Ready for immediate mobilisation.' 
+                        : ' Requires active oversight on permit gating.'}
+                    </p>
+                  </div>
+                  <div className="insight-card positive">
+                    <h5>Dominant Sector</h5>
+                    <p>
+                      Most investment flows to <strong>{scenario.portfolio_summary.dominant_category.toLowerCase()}</strong>, 
+                      providing high visibility for citizens.
+                    </p>
+                  </div>
                 </div>
               </article>
             </section>

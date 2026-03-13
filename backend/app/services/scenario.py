@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from math import ceil
 from typing import Any
 
@@ -169,9 +169,18 @@ def _safe_int(value: Any, default: int = 0) -> int:
         return default
 
 
-def _strategy_profile(strategy: str | None) -> StrategyProfile:
+def _strategy_profile(strategy: str | None, custom_weights: dict[str, float] | None = None) -> StrategyProfile:
     key = str(strategy or "balanced").strip().lower()
-    return STRATEGY_PROFILES.get(key, STRATEGY_PROFILES["balanced"])
+    profile = STRATEGY_PROFILES.get(key, STRATEGY_PROFILES["balanced"])
+    if custom_weights:
+        return replace(
+            profile,
+            key="custom",
+            label="Custom AI Vision",
+            description="Dynamically generated profile based on user consultation.",
+            weights={**profile.weights, **custom_weights},
+        )
+    return profile
 
 
 def _priority_score(item: dict[str, Any]) -> float:
@@ -271,15 +280,15 @@ def _enrich_items(items: list[dict[str, Any]], profile: StrategyProfile) -> list
                 "equity_need": equity,
                 "urgency": urgency,
                 "permit_required": permit_required,
-                "execution_months": float(round(execution_months, 2)),
-                "opex_lakh": float(round(opex_lakh, 3)),
-                "utility_score": float(round(utility_score, 6)),
-                "utility_density": float(round(utility_density, 6)),
-                "strategic_bonus": float(round(strategic_bonus, 4)),
-                "impact_norm": float(round(impact_norm, 6)),
-                "rank_norm": float(round(rank_norm, 6)),
-                "beneficiary_norm": float(round(beneficiary_norm, 6)),
-                "readiness_norm": float(round(readiness_norm, 6)),
+                "execution_months": float(round(float(execution_months), 2)),
+                "opex_lakh": float(round(float(opex_lakh), 3)),
+                "utility_score": float(round(float(utility_score), 6)),
+                "utility_density": float(round(float(utility_density), 6)),
+                "strategic_bonus": float(round(float(strategic_bonus), 4)),
+                "impact_norm": float(round(float(impact_norm), 6)),
+                "rank_norm": float(round(float(rank_norm), 6)),
+                "beneficiary_norm": float(round(float(beneficiary_norm), 6)),
+                "readiness_norm": float(round(float(readiness_norm), 6)),
             }
         )
     return enriched
@@ -697,7 +706,10 @@ def _build_tradeoff_alerts(
             {
                 "severity": "warning",
                 "topic": "Permit Exposure",
-                "message": "Selected portfolio is close to the permit-share cap; delivery may stall on approvals.",
+                "message": (
+                    f"Selected portfolio consumes {permit_share*100:.1f}% of the permit cap. "
+                    "Implementation may stall if regulatory approvals are delayed."
+                ),
             }
         )
     if agency_load and _safe_float(agency_load[0].get("share_pct")) > 45.0:
@@ -705,7 +717,10 @@ def _build_tradeoff_alerts(
             {
                 "severity": "warning",
                 "topic": "Agency Concentration",
-                "message": f"{agency_load[0]['agency']} carries a large share of spend; consider balancing implementation load.",
+                "message": (
+                    f"{agency_load[0]['agency']} carries {agency_load[0]['share_pct']}% of the total spend. "
+                    "Large workload on a single agency increases delivery risk."
+                ),
             }
         )
     if budget_utilization < 72.0:
@@ -713,7 +728,10 @@ def _build_tradeoff_alerts(
             {
                 "severity": "info",
                 "topic": "Budget Slack",
-                "message": "A meaningful share of the investable budget remains unused because of operational constraints.",
+                "message": (
+                    f"Only {budget_utilization:.1f}% of the budget is used. "
+                    "Consider relaxing readiness or agency constraints to admit more projects."
+                ),
             }
         )
     if readiness_score < 0.56:
@@ -721,7 +739,10 @@ def _build_tradeoff_alerts(
             {
                 "severity": "warning",
                 "topic": "Delivery Readiness",
-                "message": "The selected mix includes several lower-readiness projects; field preparation should start early.",
+                "message": (
+                    "High number of complex or permit-heavy projects. "
+                    "Immediate project preparation and field design are required to avoid delays."
+                ),
             }
         )
     if profile.key == "climate_resilience" and _safe_float(portfolio_summary.get("climate_share_pct")) < 55.0:
@@ -729,7 +750,10 @@ def _build_tradeoff_alerts(
             {
                 "severity": "warning",
                 "topic": "Climate Alignment",
-                "message": "Climate strategy still underweights resilience categories relative to the intended profile.",
+                "message": (
+                    "Resilience focus is lower than expected. "
+                    "Consider increasing budget to include larger flood-mitigation works."
+                ),
             }
         )
     if profile.key == "equity_first":
@@ -739,7 +763,7 @@ def _build_tradeoff_alerts(
                 {
                     "severity": "warning",
                     "topic": "Equity Targeting",
-                    "message": "Portfolio is labelled equity-first, but the selected set is only moderately concentrated in high-need projects.",
+                    "message": "Equity-first strategy is constrained by project readiness; high-need zones may be underserved.",
                 }
             )
     if skipped.get("budget", 0) > 0:
@@ -747,7 +771,7 @@ def _build_tradeoff_alerts(
             {
                 "severity": "info",
                 "topic": "Deferred Demand",
-                "message": f"{int(skipped['budget'])} candidate projects were skipped primarily because the budget ceiling was reached.",
+                "message": f"Budget limit reached; {int(skipped['budget'])} viable projects were deferred to the next cycle.",
             }
         )
     if dominant_category != "none":
@@ -755,7 +779,7 @@ def _build_tradeoff_alerts(
             {
                 "severity": "info",
                 "topic": "Portfolio Shape",
-                "message": f"The current portfolio is led by {dominant_category.lower()} interventions under the {profile.label.lower()} strategy.",
+                "message": f"Investment is primarily concentrated in {dominant_category.lower()} improvements.",
             }
         )
     return alerts[:5]
@@ -824,8 +848,9 @@ def _simulate_policy_scenario_core(
     items: list[dict[str, Any]],
     budget_lakh: float,
     strategy: str = "balanced",
+    custom_weights: dict[str, float] | None = None,
 ) -> dict[str, Any]:
-    profile = _strategy_profile(strategy)
+    profile = _strategy_profile(strategy, custom_weights)
     enriched = _enrich_items(items, profile)
     ranked = sorted(enriched, key=_priority_score, reverse=True)
     selected, constraints, skipped, fail_reasons = _realworld_select(ranked, budget_lakh, profile)
@@ -909,8 +934,9 @@ def simulate_policy_scenario(
     items: list[dict[str, Any]],
     budget_lakh: float,
     strategy: str = "balanced",
+    custom_weights: dict[str, float] | None = None,
 ) -> dict[str, Any]:
-    result = _simulate_policy_scenario_core(items, budget_lakh, strategy)
+    result = _simulate_policy_scenario_core(items, budget_lakh, strategy, custom_weights)
     result["strategy_comparison"] = build_strategy_comparison(items, budget_lakh)
     return result
 
@@ -919,10 +945,11 @@ def build_counterfactuals(
     items: list[dict[str, Any]],
     base_budget: float,
     strategy: str = "balanced",
+    custom_weights: dict[str, float] | None = None,
 ) -> list[dict[str, float]]:
     scenarios: list[dict[str, float]] = []
     for budget in [base_budget * 0.75, base_budget, base_budget * 1.30]:
-        result = _simulate_policy_scenario_core(items, budget, strategy)
+        result = _simulate_policy_scenario_core(items, budget, strategy, custom_weights)
         selected = result["selected_projects"]
         permit_share = (
             float(sum(1 for it in selected if bool(it.get("permit_required"))) / max(len(selected), 1))
@@ -1011,8 +1038,12 @@ FLOOR_PCT = 0.04   # every sector gets at least 4%
 CEIL_PCT  = 0.44   # no sector exceeds 44%
 
 
-def _compute_sector_urgency(indicators: dict[str, Any]) -> dict[str, float]:
+def _compute_sector_urgency(
+    indicators: dict[str, Any], 
+    priorities: dict[str, float] = None
+) -> dict[str, float]:
     """Convert ward indicator dict into a raw urgency score per sector."""
+    # Base indicators...
     blocked_drains     = float(indicators.get("blocked_drain_count", 0) or 0)
     flood_pct          = float(indicators.get("flood_exposure_pct", 0) or 0) / 100.0
     exposed_pop        = float(indicators.get("exposed_population", 0) or 0)
@@ -1023,12 +1054,14 @@ def _compute_sector_urgency(indicators: dict[str, Any]) -> dict[str, float]:
     house_count        = float(indicators.get("house_count", 0) or 0)
     equity_need        = float(indicators.get("equity_score", 0.5) or 0.5)
 
+    priorities = priorities or {}
+
     # Normalise blocked drains to 0-1 (assume 30 drains = high)
     drain_norm  = float(np.clip(blocked_drains / 30.0, 0.0, 1.0))
     pop_norm    = float(np.clip(exposed_pop / max(total_pop, 1), 0.0, 1.0))
     infra_gap   = float(np.clip(house_count / max(road_km * 80.0, 1), 0.0, 1.0))
 
-    return {
+    scores = {
         "Drainage":      drain_norm * 0.50 + flood_pct * 0.50,
         "Water":         pop_norm   * 0.55 + informal_pct * 0.45,
         "Waste":         informal_pct * 0.65 + drain_norm * 0.35,
@@ -1036,6 +1069,14 @@ def _compute_sector_urgency(indicators: dict[str, Any]) -> dict[str, float]:
         "Green":         float(np.clip(green_deficit, 0.0, 1.0)) * 0.90 + 0.05,
         "Public Safety": (1.0 - equity_need) * 0.55 + 0.10,
     }
+
+    # Apply AI-driven priorities as a boost factor
+    # If a priority is 1.0, it doubles the score. If 0.0, it halves it.
+    for k in scores:
+        p = priorities.get(k, 0.5) # default to neutral 0.5
+        scores[k] = scores[k] * (0.5 + p)
+
+    return scores
 
 
 def _softmax(scores: dict[str, float]) -> dict[str, float]:
@@ -1072,6 +1113,8 @@ def _apply_floor_ceil(weights: dict[str, float]) -> dict[str, float]:
 def predict_budget_allocation(
     indicators: dict[str, Any],
     budget_lakh: float,
+    sector_priorities: dict[str, float] = None,
+    sector_rationales: dict[str, str] = None,
 ) -> dict[str, Any]:
     """
     Given ward indicators and a total budget in lakh BDT, predict the  
@@ -1079,7 +1122,7 @@ def predict_budget_allocation(
     """
     budget_lakh = max(float(budget_lakh), 0.5)
 
-    urgency_raw   = _compute_sector_urgency(indicators)
+    urgency_raw   = _compute_sector_urgency(indicators, priorities=sector_priorities)
     softmax_w     = _softmax(urgency_raw)
     final_weights = _apply_floor_ceil(softmax_w)
 
@@ -1094,6 +1137,9 @@ def predict_budget_allocation(
         amount = round(final_weights[sector] * budget_lakh, 2)
         meta   = SECTOR_META[sector]
         hh_impact = max(1, int(total_hh * final_weights[sector] * 1.4))
+        # Use AI-generated rationale if available, otherwise template
+        rationale = (sector_rationales or {}).get(sector, meta["rationale_template"])
+        
         sectors.append({
             "name":            sector,
             "icon":            meta["icon"],
@@ -1101,7 +1147,7 @@ def predict_budget_allocation(
             "allocation_pct":  pct,
             "allocation_lakh": amount,
             "urgency_score":   round(urgency_raw[sector], 4),
-            "rationale":       meta["rationale_template"],
+            "rationale":       rationale,
             "expected_outcome": meta["outcome_template"].format(hh=f"{hh_impact:,}"),
         })
 
