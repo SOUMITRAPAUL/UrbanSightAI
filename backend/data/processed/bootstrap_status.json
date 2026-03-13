@@ -1,0 +1,9 @@
+{
+  "status": "ready",
+  "dataset_version": "2.8.0",
+  "boundary_source": "hdx_codab_admin4_points_voronoi",
+  "map_source": "openstreetmap_overpass_api",
+  "ward_count": 112,
+  "seeded_domain_data": false,
+  "real_data_only": true
+}

@@ -1,0 +1,335 @@
+{
+  "prioritizer": {
+    "model": "prioritizer",
+    "algorithm": "GradientBoostingRegressor + one-hot features",
+    "target": "impact_signal",
+    "training_rows": 2856,
+    "test_rows": 952,
+    "features": [
+      "category",
+      "agency",
+      "permit_required",
+      "estimated_cost_lakh",
+      "expected_beneficiaries",
+      "feasibility",
+      "equity_need",
+      "urgency"
+    ],
+    "metrics": {
+      "prioritizer_mae": 0.018591,
+      "prioritizer_rmse": 0.023756,
+      "prioritizer_r2": 0.91176,
+      "prioritizer_interval_coverage": 0.878151,
+      "prioritizer_interval_avg_width": 0.072608,
+      "prioritizer_permit_mae_gap": 0.001179
+    },
+    "top_features": [
+      {
+        "feature": "numeric__estimated_cost_lakh",
+        "importance": 0.45062
+      },
+      {
+        "feature": "numeric__urgency",
+        "importance": 0.182196
+      },
+      {
+        "feature": "numeric__feasibility",
+        "importance": 0.164919
+      },
+      {
+        "feature": "numeric__equity_need",
+        "importance": 0.130452
+      },
+      {
+        "feature": "numeric__expected_beneficiaries",
+        "importance": 0.039096
+      },
+      {
+        "feature": "categorical__agency_City Corporation",
+        "importance": 0.021049
+      },
+      {
+        "feature": "categorical__category_Road",
+        "importance": 0.004386
+      },
+      {
+        "feature": "categorical__agency_LGED",
+        "importance": 0.003721
+      },
+      {
+        "feature": "categorical__category_Drainage",
+        "importance": 0.003241
+      },
+      {
+        "feature": "categorical__category_Public Safety",
+        "importance": 0.000146
+      },
+      {
+        "feature": "categorical__category_Waste",
+        "importance": 7.2e-05
+      },
+      {
+        "feature": "categorical__agency_RAJUK",
+        "importance": 6.6e-05
+      }
+    ],
+    "fairness_checks": {
+      "permit_group_mae": {
+        "False": 0.018365,
+        "True": 0.019545
+      },
+      "permit_group_mae_gap": 0.001179,
+      "category_mae_top": {
+        "Public Safety": 0.020334,
+        "Waste": 0.019986,
+        "Green": 0.018484,
+        "Road": 0.018466,
+        "Water": 0.017497,
+        "Drainage": 0.016886
+      }
+    },
+    "uncertainty": {
+      "method": "split conformal from calibration residuals",
+      "interval_coverage_test": 0.878151,
+      "interval_avg_width": 0.072608
+    },
+    "limitations": [
+      "Trained on pilot-scale interventions and synthetic augmentation.",
+      "Ranking confidence is weaker for unseen project categories/agencies."
+    ]
+  },
+  "civic_nlp": {
+    "model": "civic_intelligence_nlp",
+    "algorithm": "TF-IDF + LogisticRegression with calibrated probabilities",
+    "training_rows": 300,
+    "test_rows": 75,
+    "labels": [
+      "blocked_drain",
+      "flooding",
+      "road_damage",
+      "waste",
+      "water_supply"
+    ],
+    "metrics": {
+      "civic_classifier_accuracy": 1.0,
+      "civic_classifier_balanced_accuracy": 1.0,
+      "civic_classifier_macro_f1": 1.0,
+      "civic_classifier_weighted_f1": 1.0,
+      "civic_classifier_ece": 0.055478,
+      "civic_language_f1_gap": 0.0
+    },
+    "per_class_recall": {
+      "blocked_drain": 1.0,
+      "flooding": 1.0,
+      "road_damage": 1.0,
+      "waste": 1.0,
+      "water_supply": 1.0
+    },
+    "language_macro_f1": {
+      "bangla": 1.0,
+      "english": 1.0
+    },
+    "confusion_matrix": {
+      "labels": [
+        "blocked_drain",
+        "flooding",
+        "road_damage",
+        "waste",
+        "water_supply"
+      ],
+      "matrix": [
+        [
+          15,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          15,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          15,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          15,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          15
+        ]
+      ]
+    },
+    "limitations": [
+      "Bangla dialect and mixed-script colloquial reports can reduce confidence.",
+      "Extremely short reports may require human validation."
+    ]
+  },
+  "drain_monitor": {
+    "model": "drainage_blockage_monitor",
+    "algorithm": "Calibrated RandomForestClassifier",
+    "training_rows": 5355,
+    "test_rows": 815,
+    "features": [
+      "segment_length_m",
+      "water_proximity",
+      "house_density",
+      "citizen_pressure",
+      "rainfall_sensor_mm",
+      "pump_runtime_hours",
+      "last_maintenance_days"
+    ],
+    "metrics": {
+      "drain_monitor_accuracy": 0.998773,
+      "drain_monitor_balanced_accuracy": 0.998773,
+      "drain_monitor_precision": 1.0,
+      "drain_monitor_recall": 0.998773,
+      "drain_monitor_f1": 0.999386,
+      "drain_monitor_auc": 0.5,
+      "drain_monitor_pr_auc": 1.0,
+      "drain_monitor_brier": 0.001019,
+      "drain_monitor_ece": 0.007211,
+      "drain_monitor_ward_recall_gap": 0.013699,
+      "drain_monitor_threshold": 0.52
+    },
+    "top_features": [
+      {
+        "feature": "house_density",
+        "importance": 0.506099
+      },
+      {
+        "feature": "water_proximity",
+        "importance": 0.222295
+      },
+      {
+        "feature": "citizen_pressure",
+        "importance": 0.087259
+      },
+      {
+        "feature": "pump_runtime_hours",
+        "importance": 0.06167
+      },
+      {
+        "feature": "last_maintenance_days",
+        "importance": 0.052587
+      },
+      {
+        "feature": "segment_length_m",
+        "importance": 0.041074
+      },
+      {
+        "feature": "rainfall_sensor_mm",
+        "importance": 0.029017
+      }
+    ],
+    "ward_recall": {
+      "23": 1.0,
+      "78": 1.0,
+      "81": 1.0,
+      "88": 1.0,
+      "89": 1.0,
+      "106": 1.0,
+      "108": 0.986301
+    },
+    "decision_threshold": 0.52,
+    "limitations": [
+      "Severe unseen weather anomalies can shift score calibration.",
+      "Low-sensor wards rely more heavily on proxy features."
+    ]
+  },
+  "flood_risk": {
+    "model": "flood_risk_regressor",
+    "algorithm": "GradientBoostingRegressor + quantile uncertainty heads",
+    "training_rows": 2054,
+    "test_rows": 666,
+    "features": [
+      "water_proximity",
+      "drainage_congestion",
+      "impervious_surface",
+      "elevation_proxy",
+      "rainfall_sensor_mm",
+      "citizen_flood_pressure"
+    ],
+    "metrics": {
+      "flood_model_mae": 0.042945,
+      "flood_model_rmse": 0.053316,
+      "flood_model_r2": 0.847413,
+      "flood_model_quantile_coverage": 0.8003,
+      "flood_model_quantile_width": 0.136223,
+      "flood_model_conformal_coverage": 0.908408,
+      "flood_model_bucket_mae_gap": 0.02216
+    },
+    "top_features": [
+      {
+        "feature": "impervious_surface",
+        "importance": 0.518036
+      },
+      {
+        "feature": "water_proximity",
+        "importance": 0.225142
+      },
+      {
+        "feature": "drainage_congestion",
+        "importance": 0.109337
+      },
+      {
+        "feature": "elevation_proxy",
+        "importance": 0.056349
+      },
+      {
+        "feature": "rainfall_sensor_mm",
+        "importance": 0.04945
+      },
+      {
+        "feature": "citizen_flood_pressure",
+        "importance": 0.041687
+      }
+    ],
+    "risk_bucket_mae": {
+      "low": 0.060903,
+      "medium": 0.04351,
+      "high": 0.038743
+    },
+    "uncertainty": {
+      "quantile_coverage": 0.8003,
+      "quantile_avg_width": 0.136223,
+      "conformal_coverage": 0.908408,
+      "conformal_avg_width": 0.178364
+    },
+    "limitations": [
+      "Relies on proxy elevation and congestion features, not full hydraulic simulation.",
+      "Rare extreme rainfall periods may require recalibration."
+    ]
+  },
+  "segmentation": {
+    "model": "informal_area_segmentation",
+    "algorithm": "MiniUNet",
+    "training_rows": 224,
+    "validation_rows": 56,
+    "metrics": {
+      "segmentation_mean_iou": 0.928165,
+      "segmentation_mean_dice": 0.962583,
+      "segmentation_mean_precision": 0.932048,
+      "segmentation_mean_recall": 0.995476
+    },
+    "limitations": [
+      "Pilot model uses synthetic-style training patches for rapid prototyping.",
+      "Boundary precision may degrade on low-contrast or clouded imagery."
+    ]
+  }
+}

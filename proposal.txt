@@ -1,0 +1,857 @@
+AI-Based Project Proposal
+
+Project Title: UrbanSightAI
+Course Code : SE 803
+Submitted to
+Md. Saeed Siddik
+Assistant Professor
+Institute of Information Technology
+University of Dhaka
+
+Submitted by
+Group 03:
+Soumitra Pal (BSSE 1317)
+Hasibul Hossain (BSSE 1329)
+Eftiare Ahmed Rimon(BSSE 1355)
+Institute of Information Technology
+University of Dhaka
+
+Date of Submission
+December 6, 2025
+
+1
+
+1. Introduction & Problem Statement.......................................................................................3
+2. Motivation & Rationale.........................................................................................................4
+3. Background Study / Related Works (policy-oriented synthesis).......................................... 5
+UrbanSightAI is a policy-first platform designed to:........................................................... 6
+AI Components policy tools (what they do, and what they output)................................... 6
+Technical Workflow concise, policy-oriented steps........................................................... 7
+Full-Scale Future Implementation (beyond course pilot)................................................... 8
+5.0 Scope and Pilot Implementation........................................................................................ 8
+Project Scope.....................................................................................................................8
+Pilot Implementation (For This Course)............................................................................. 8
+6. Budget & Resource Plan.........................................................................................................9
+Consolidated budget........................................................................................................ 12
+7. Impact on Society.............................................................................................................. 12
+8. Alignment with Sustainable Development Goals (SDGs).................................................. 13
+SDG 11: Sustainable Cities & Communities.................................................................... 13
+Additional SDG Linkages................................................................................................. 13
+1. Municipal Subscription (Core B2G / B2City)................................................................ 14
+2. Data-as-a-Service (DaaS) & API Access.....................................................................14
+3. Consultancy & Integration Services............................................................................. 14
+4. Grants & Development Funding...................................................................................14
+5. Performance-Based / Results Contracts......................................................................14
+6. Civic Premium Services (Optional & Low-Cost)...........................................................15
+7. Ethical Commercial Partnerships.................................................................................15
+8. Training & Certification Programs................................................................................ 15
+9. White-label / Licensing.................................................................................................15
+10. Expected Outcomes and Deliverables.............................................................................15
+1. AI Policy Prioritization Output...................................................................................... 15
+2. AI Governance Chatbot............................................................................................... 16
+3. Ward-Level Digital Twin Dashboard.............................................................................16
+4. Budget Scenario & Policy Recommendation Engine................................................... 16
+5. Integrated Web Platform for Planners..........................................................................16
+References............................................................................................................................ 16
+
+2
+
+ProjectTitle:UrbanSightAI
+Data-Driven Governance for Resilient Cities
+
+1. Introduction & Problem Statement
+Rapid urbanization in Bangladesh has exposed governance shortfalls that are the principal
+obstacle to realizing SDG-11 at the local level. Core municipal functions,drainage,road
+maintenance, land-use regulation, utilities and emergency response are split among multiple
+agencies (city corporations,RAJUK,WASA,LGED), producing overlapping mandates, duplicated
+investments and slow inter-agency handoffs that stall implementation at the ward level [1][4]. At
+the same time, municipal fiscal autonomy is weak and planning capacity remains limited; critical
+ward-scale operational data are fragmented, outdated, or inaccessible to the staff who must
+make budget decisions [2][5]. Informal settlements where vulnerability concentrates are
+frequently unmapped or excluded from routine plans, leaving large populations uncounted in
+resource allocation and exposed to repeated service failures (waterlogging, fire risk, sanitation
+gaps) [14][15].
+This is a governance problem more than a technical one: councils and engineers rarely lack
+willing action; they lack trusted, ward-level evidence, standardized decision products, and
+straightforward budget-ready justification that fit municipal procurement and financing cycles.
+Without these policy instruments, authorities default to reactive, costly interventions rather than
+preventive, prioritized investments that reduce exposure and deliver durable SDG-11 outcomes
+[1][20]. UrbanSightAI is explicitly designed to close that gap by converting spatial data and field
+verification into budget-aware, interagency-ready policy outputs (Top-N worklists, costed
+memos, SDG-11 ward cards) municipal teams can adopt immediately [17][18][19].
+
+2. Motivation & Rationale
+Policy impact requires alignment of three elements: evidence, decision rules, and financing. In
+Bangladesh, two persistent bottlenecks impede that alignment: (a) inconsistent or inaccessible
+ward-level evidence and (b) constrained, opaque municipal finance that slows targeted action
+[2][5]. UrbanSightAI is designed to bridge these gaps with a “policy-first” architecture: AI and
+geospatial analytics are used not as ends but as translators converting imagery and reports into
+plain-language, costed, implementable actions that match municipal workflows and budget
+cycles [1][13].
+Why this matters for policy. Simple, low-cost micro-interventions (drain cleaning, short road
+repairs, waste hotspot clearance, targeted tree planting) deliver outsized returns when allocated
+to the right places. But planners lack a repeatable, auditable method to pick the “right places.”
+UrbanSightAI provides that method: it produces ranked, equity-weighted intervention lists,
+shows the expected beneficiaries, flags permits and responsible agencies, and packages all this
+
+3
+
+into procurement-ready briefs for finance and engineering teams. Evidence from municipal
+observatories and participatory platforms shows that decision-support tools which produce
+exportable, accountable policy products are the ones that get used in budgets and council
+meetings; the design therefore prioritizes usability and defensibility over maximum technical
+sophistication [11][13][8].
+Operationally, the pilot uses light, accessible data (Sentinel/Landsat, municipal shapefiles or
+OSM fallbacks, and focused field labeling of ~200–400 geotagged points) so municipalities can
+implement quickly without heavy sensor investments [17][18][19]. Civic validation (Bangla
+chatbot + participatory portal) is embedded so community priorities appear as weighted inputs in
+ranking increasing legitimacy and reducing political friction [8][10]. Economically, prioritizing
+micro-works reduces repeated emergency spending and creates clear, data-based cases for
+reallocation or donor support, a pragmatic path to scale that speaks directly to finance officers
+and councillors [5][6]. The pilot will demonstrate measurable policy wins (reduced
+detection-to-workorder time; share of Top-N items adopted), creating a replicable model for
+SDG-11 localization across Bangladeshi cities [1][20].
+
+3. Background Study / Related Works (policy-oriented
+synthesis)
+UrbanSightAI draws on three strands with direct policy relevance.
+SDG localization & municipal finance:UN inter-agency policy briefs and national reviews
+emphasize that SDG delivery is local by design: achieving SDG targets requires empowered
+municipal governments with interoperable data, fiscal tools, and transparent prioritization
+mechanisms [1][2][20]. Studies of subnational finance document limited own-source revenue
+and dependency on central transfers, which delays action even when priorities are known,
+underscoring the need for tools that improve the case for timely municipal spending [5][4].
+Operational urban platforms & participatory governance:Global practitioner cases show
+how fused data plus governance-focused outputs change municipal behavior. Jakarta’s flood
+dashboard and city observatories illustrate how data integration informs operational
+decision-making; Decidim and civic chatbots demonstrate how structured citizen input can be
+turned into traceable policy signals used in budgeting and planning [11][13][8][9][10]. The core
+lesson: dashboards that remain purely informational rarely change budgets but systems that
+produce simulation outputs, procurement-ready briefs and participatory validation do affect
+policy.
+Technical evidence for implementable indicators:Remote-sensing and ML research confirm
+that feasible, operational indicators (informal settlement footprint, blocked-drain counts,
+green-deficit indices) can be generated from multispectral imagery when paired with targeted
+field validation and simple spatial joins [14][15]. Short-horizon predictors and change-detection
+
+4
+
+methods add timing and evidence for urgency, but their policy value depends on packaging into
+budgeted, interagency actions rather than raw forecasts [16]. Few projects close this last mile:
+convert mapping into cost, equity-aware intervention lists and interagency coordination packets
+which is precisely the gap UrbanSightAI addresses by design [12][14][15].
+
+4.0 Proposed Solution Technical Methodology.
+UrbanSightAI is a policy-first platform designed to:
+i. Equip municipal decision-makers with a ward-level digital twin that summarizes
+assets, service gaps, exposure and governance constraints.​
+ii. Produce ranked, cost policy actions (micro-works) formatted for budget requests,
+procurement and engineering work orders.​
+iii. Run scenario simulations that show budget → outcome tradeoffs (impact, equity,
+timeline).​
+iv. Integrate citizen evidence (chatbot / participatory portal) so community priorities and
+complaints directly influence policy ranks.​
+v. Provide automated SDG-11 governance cards, inter-agency packets and audit trails
+for transparency and donor reporting.
+
+AI Components policy tools (what they do, and what they output)
+
+5
+
+1.​ Prioritization & Decision Ranker (core)​
+
+What it is: A ranker (LightGBM / XGBoost or logistic ranker) that scores
+candidate projects by impact-per-cost, feasibility and equity weighting.​
+
+Policy output: Ordered “Top-N” worklist with simple justifications (people
+helped, cost, why now).​
+
+2.​ Policy Scenario Simulator (prescriptive engine)​
+
+What it is: Lightweight simulator that tests counterfactuals (allocate X
+BDT → predicted reduction in affected households).​
+
+Policy output: Budget comparison tables and one-page memos for
+finance officers.​
+
+3.​ Evidence Extractor (segmentation → indicators)​
+
+What it is: Segmentation model (U-Net/DeepLab) + spatial joins that
+convert imagery and vectors into policy indicators (area informal, blocked
+drains count, green deficit).​
+
+Policy output: Standardized indicators used in ranking and reports.​
+
+4.​ Civic Intelligence (NLP + Chatbot)​
+
+What it is: Bangla NLP pipeline / lightweight LLM that classifies citizen
+reports, sentiment and priority signals.​
+
+Policy output: Validation flags and community-priority scores that nudge
+rankings and create community-facing summary pages.​
+
+6
+
+5.​ Governance Summarizer (generative brief generator)​
+
+What it is: Template-based generative module that converts data +
+ranking into editable policy briefs and procurement notes.​
+
+Policy output: Ready-to-sign one-page briefs, procurement checklists
+and donor-ready charts.
+
+Technical Workflow concise, policy-oriented steps
+1.​ Data intake: ingest satellite, ward GIS, asset registers, census/gridded pop, past
+workorders, citizen reports.​
+2.​ Preprocess & standardize: tile imagery, compute indices, align vectors and tag
+provenance.​
+3.​ Evidence extraction: run segmentation and anomaly detectors → compute ward
+indicators (exposed population, service gaps).​
+4.​ Candidate generation: auto-propose feasible micro-works (jurisdiction, permit
+flag, rough unit cost).​
+
+7
+
+5.​ Rank & simulate: Prioritization Ranker orders candidates; Scenario Simulator
+runs budget tests and equity impacts.​
+6.​ Produce policy packets: Top-N list → one-page brief + interagency checklist +
+export (CSV/PDF) for procurement.​
+7.​ Field & civic validation: mobile verification + chatbot feedback update scores;
+system logs actions for audit and retraining.​
+
+Full-Scale Future Implementation (beyond course pilot)
+i. Deploy microservices for resilient, multi-ward scaling.​
+ii. Integrate with municipal financial systems and procurement APIs for end-to-end
+budget workflows.​
+iii. Expand indicator library (health, mobility, air/heat metrics) and multi-season training
+data.​
+iv. Federate municipal datasets with national LGD/RAJUK resources under MOUs.​
+v. Add role-based governance console (finance, engineering, councillor views) and
+meeting-ready export packs.​
+vi. Institutionalize a small UrbanSightAI policy unit inside city government to steward
+data, priorities and model updates.​
+vii. Offer managed service model (municipal subscription + capacity building) to fund
+continued operations.
+
+5.0 Scope and Pilot Implementation
+Project Scope
+i. Build the core UrbanSightAI system with an AI Prioritization engine, Digital-Twin assembly,
+Bangla chatbot (citizen input), and a Policy Scenario Simulator.​
+ii. Provide chatbot interfaces and citizen-facing support (chatbot messages, participatory portal
+summaries, and simple field forms).​
+iii. Deliver a web planner dashboard for ward selectors, SDG-11 cards, exportable Top-N
+worklists and policy packets.​
+iv. Train and validate models using small-scale, locally collected datasets in the pilot (satellite
+patches, 200–400 geotagged field photos, basic municipal layers).
+
+8
+
+Pilot Implementation (For This Course)
+For the course pilot we will implement a ward-scale, policy-focused proof-of-concept with these
+concrete components:
+1.​ Basic web dashboard & user registration role-based login (planner / enumerator /
+viewer), ward selector, last-update stamp, CSV/PDF export.​
+2.​ Pilot Prioritization Model a lightweight ranking model (LightGBM baseline) that scores
+candidate micro-works by impact-per-cost and equity; outputs a Top-10 worklist.​
+3.​ Segmentation & Evidence Extractor (pilot) U-Net/transfer-learning pilot that maps
+informal patches and generates standardized ward indicators (exposed area,
+blocked-drain count).​
+4.​ Policy Scenario Simulator (mini) simple budget→impact simulator that tests 2–3
+counterfactuals and produces one-page memos for finance officers.​
+5.​ Chatbot & Field Data Pipe basic NLP classifier for citizen reports (blocked drain, flood,
+waste) plus an ODK/KoBo form; includes a notification/simulation console to demo
+stakeholder flows.​
+
+The
+remaining
+modules
+(full-scale simulation, interagency packet automation,
+reinforcement-learning prioritizer, national rollout features) will be planned for post-course
+expansion and productization.
+
+9
+
+6. Budget & Resource Plan
+Table 6.1: Estimated budget (personnel costs)
+
+Economic
+code
+
+Description
+
+Unit
+
+Cost per
+unit (lakh
+Tk)
+
+Estimated
+cost (lakh
+Tk)
+
+% of total
+
+Justification
+
+A1
+
+AI/ML Engineers
+(Model dev,
+ranker, simulator)
+
+2
+
+1.8
+
+3.6
+
+18.3
+
+Build
+LightGBM/XGBoost
+ranker, scenario
+simulator, and ML
+pipelines; core
+technical delivery
+
+A2
+
+Geospatial Analyst
+(Imagery +
+indicators)
+
+1
+
+1.65
+
+1.65
+
+8.4
+
+Sentinel/Landsat
+preprocessing, U-Net
+mapping, indicator
+generation, spatial
+joins
+
+A3
+
+Backend
+Developer (APIs +
+integration)
+
+1
+
+1.50
+
+1.50
+
+7.6
+
+Planner APIs, data
+intake services, export
+endpoints (CSV/PDF)
+
+A4
+
+Frontend/UI
+Developer
+(Dashboard +
+portal)
+
+1
+
+1.35
+
+1.35
+
+6.9
+
+Ward dashboard,
+digital-twin assembly,
+role-based UI,
+low-literacy flow
+
+A5
+
+Policy Researcher
+(Briefs, SDG-11
+cards)
+
+1
+
+1.20
+
+1.20
+
+6.1
+
+Governance
+summaries,
+procurement-ready
+memos, inter-agency
+packet drafting
+
+A6
+
+Field Enumerators
+(Citizen input,
+validation)
+
+2
+
+0.75
+
+1.5
+
+7.6
+
+200–400 geotagged
+points, ground-truthing,
+ODK/KoBo ops and
+QA
+
+Subtotal
+personnel
+(A): 10.80
+
+54.8
+
+10
+
+Table 6.2: Estimated budget (operational expenses)
+
+Economic
+code
+
+Description
+
+B1
+
+Unit
+
+Cost per
+unit (lakh
+Tk)
+
+Estimated
+cost (lakh
+Tk)
+
+% of total
+
+Justification
+
+Cloud hosting (VM 1
++ modest GPU)
+
+0.60
+
+0.60
+
+3.0
+
+Training/inference for
+pilot models; uptime
+for planner/dashboard
+
+B2
+
+Data acquisition
+(satellite patches,
+field photos)
+
+1
+
+0.75
+
+0.75
+
+3.8
+
+Imagery tiles, labeled
+samples, municipal
+layers (OSM fallbacks)
+
+B3
+
+Software
+tools/licenses
+
+1
+
+0.40
+
+0.40
+
+2.0
+
+GIS add-ons, design
+tools, paid plugins
+(major ML libs remain
+free)
+
+B4
+
+Communication &
+outreach
+(chatbot/SMS,
+portal)
+
+1
+
+0.50
+
+0.50
+
+2.5
+
+SMS quotas, portal
+messaging, citizen
+feedback operations
+
+B5
+
+Training &
+workshops
+(municipal +
+enumerators)
+
+1
+
+0.60
+
+0.60
+
+3.0
+
+Onboarding, hands-on
+sessions, materials for
+operational handoff
+
+Subtotal
+operational
+(B): 2.85
+
+14.5
+
+11
+
+Table 6.3: Estimated budget (capital expenditure)
+
+Economic
+code
+
+Description
+
+Unit
+
+Cost
+per unit
+(lakh
+Tk)
+
+Estimated
+cost (lakh
+Tk)
+
+% of
+total
+
+Justification
+
+C1
+
+GPU-enabled
+workstation/server
+
+1
+
+2.00
+
+2.00
+
+10.1
+
+Local ML training,
+reproducible
+experiments, secure
+data handling
+
+C2
+
+Field tablets/smartphones
+(enumerators)
+
+4
+
+0.25
+
+1.00
+
+5.1
+
+Reliable field capture,
+offline forms, photo
+evidence collection
+
+C3
+
+Networking & storage
+equipment
+
+1
+
+0.50
+
+0.50
+
+2.5
+
+NAS/backup, faster
+internal transfers,
+dataset persistence
+
+Subtotal
+capital (C):
+3.50
+
+17.8
+
+Table 6.4: Estimated budget (administrative, overhead and risk buffer)
+Economic
+code
+
+Description
+
+Cost (lakh
+Tk)
+
+% of total
+
+Justification
+
+D1
+
+Institutional
+overhead (10% of
+A+B+C)
+
+1.72
+
+8.7
+
+Standard overhead on direct costs
+(A+B+C = 17.15 lakh)
+
+D2
+
+Contingency / risk
+buffer (2% of
+A+B+C)
+
+0.34
+
+1.7
+
+Field and ops uncertainties (weather
+delays, data gaps)
+
+D3
+
+Miscellaneous
+administrative costs
+
+0.50
+
+2.5
+
+Procurement fees, printing, local
+compliance, small gear
+
+Total administrative
+(D)
+
+2.56
+
+13.0
+
+12
+
+Consolidated budget
+●​
+●​
+●​
+●​
+
+Personnel (A): 10.80 lakh
+Operational (B): 2.85 lakh
+Capital (C): 3.50 lakh
+Administrative/Overhead (D): 2.56 lakh
+
+TOTAL PROJECT COST (A + B + C + D): 19.71 lakh Taka
+
+7. Impact on Society
+UrbanSightAI strengthens urban governance by enabling data-grounded policy, fair
+budgeting, and transparent decision-making. It will:
+i. Improve ward-level planning through actionable, quantified insights.​
+ii. Reduce resource waste by replacing reactive fixing with evidence-based
+prioritization.​
+iii. Enable equitable development by highlighting underserved zones in policy ranking.​
+iv. Increase transparency through citizen participation and audit-ready decision logs.​
+v. Support faster response, better spending, and fairer city service distribution.
+This leads to more accountable institutions, safer urban environments, and resilient
+growth.
+
+8. Alignment with Sustainable Development Goals (SDGs)
+UrbanSightAI contributes directly to SDG-11: Sustainable Cities & Communities, and
+supports several governance and climate-aligned targets.
+
+SDG 11: Sustainable Cities & Communities
+● Target 11.3 Improve inclusive and sustainable urban planning.​
+● Target 11.5 Reduce disaster impact through early signals & resource planning.​
+● Target 11.6 Better waste/drain prioritization reduces environmental burden.​
+
+13
+
+● Target 11.7 Helps planners increase access to public spaces & green zones.​
+● Target 11.b Supports risk-sensitive policies via data-driven planning tools.
+
+Additional SDG Linkages
+• SDG 13: Climate Action Supports climate-risk planning & impact-forecasting.​
+• SDG 9: Industry, Innovation & Infrastructure Builds digital governance capacity.​
+• SDG 16: Peace, Justice & Strong Institutions Promotes transparency, accountability
+& citizen-inclusive decision-making.
+
+9.0 Revenue Plan & Sustainability
+UrbanSightAI is designed to be socially useful and financially sustainable. The revenue
+model combines municipal subscriptions, data services, consultancy, grants and light
+civic premium options. Each stream keeps basic civic access free while generating
+stable income to fund operations, model updates and scale.
+
+1. Municipal Subscription (Core B2G / B2City)
+What: Tiered annual subscriptions by city size / wards (basic → standard → enterprise).
+Includes dashboard access, Top-N worklists, scenario simulator, API access and admin
+training.​
+Why it generates revenue: City budgets already fund planning tools; a small line-item
+for data-driven prioritization is cost-justified by improved budget efficiency and reduced
+emergency spend.
+
+2. Data-as-a-Service (DaaS) & API Access
+What: Pay-per-dataset or subscription API (ward indicators, historical exposure maps,
+time-series exports) for planners, researchers and NGOs.​
+Why: Researchers and consultancies pay for clean, processed urban datasets;
+recurring API fees scale with usage.
+
+3. Consultancy & Integration Services
+What: One-time fees for integration (procurement packet automation), training
+workshops, MOU facilitation, and custom model tuning.​
+
+14
+
+Why: Municipalities lack in-house capacity; paid integration reduces adoption friction
+and funds local onboarding.
+
+4. Grants & Development Funding
+What: Seed grants and implementation funding from donors, development banks, and
+UN agencies for pilot and scale phases.​
+Why: Development partners favor measurable SDG tools; grants lower municipal
+up-front costs and de-risk adoption.
+
+5. Performance-Based / Results Contracts
+What: Contracts that tie fees to agreed outcomes (e.g., % of Top-N actions adopted,
+reduction in detection→workorder time).​
+Why: Demonstrates value and aligns incentives donors or city units pay more when
+measurable improvements occur.
+
+6. Civic Premium Services (Optional & Low-Cost)
+What: Basic citizen reporting and dashboard remain free. Optional paid civic features
+(neighborhood alerts via SMS, advanced historical reports for NGOs) offered at low
+cost.​
+Why: Maintains accessibility while monetizing high-value convenience features for local
+NGOs and community groups.
+
+7. Ethical Commercial Partnerships
+What: Aggregated, anonymized analytics for utilities, insurers, or real-estate firms
+(non-sensitive, opt-in). No individual-level or household-identifying commercial sales.​
+Why: Private sector will pay for city-level risk and exposure analytics if privacy and
+ethics are preserved.
+
+8. Training & Certification Programs
+What: Paid certification for municipal staff and consultants in using UrbanSightAI
+workflows and interpreting outputs.​
+Why: Helps institutionalize use and creates a recurring training revenue stream.
+
+15
+
+9. White-label / Licensing
+What: License the platform (or parts) to regional consultancies or NGOs who want a
+branded deployment.​
+Why: Accelerates geographic scale without full in-house expansion.
+​
+
+10. Expected Outcomes and Deliverables
+1. AI Policy Prioritization Output
+An advanced ranking model that optimizes micro-works by cost-efficiency and social equity, providing planners with evidence-based justifications.
+2. Global AI Expert Assistant
+An English-language RAG interface that translates complex data and citizen signals into structured policy insights.
+3. Ward-Level Digital Twin Dashboard
+High-fidelity spatial analytics for real-time visualization of service gaps, infrastructure conditions, and flood risks.
+4. Budget Scenario & Policy Recommendation Engine
+A prescriptive simulation tool that forecasts project outcomes per BDT spent, ensuring maximum impact for every budget allocation.
+5. Unified Planner Console
+A professional dashboard for indicator tracking, multi-agency coordination, and official policy brief generation (PDF/CSV).
+Backend APIs connect all AI components into one cohesive governance tool.
+
+References
+1.​ UN Inter-Agency Policy Brief: Accelerating SDG Localization.
+https://sdgs.un.org/publications/inter-agency-policy-brief-accelerating-sdg-localization-de
+liver-promise-2030-agenda​
+2.​ UN Breaking the SDG finance gridlock through strengthening local government finance.
+https://sdgs.un.org/publications/inter-agency-policy-brief-breaking-sdg-finance-gridlock-t
+hrough-strengthening-local​
+3.​ UN Bangladesh SDG 11 overview. https://bangladesh.un.org/en/sdgs/11​
+4.​ GIZ Good Practices on SDG Localisation in Urban Areas of Bangladesh.
+https://www.giz.de/en/downloads/giz2023-en-good-practice-on-SDG-localisation-in-urba
+n-areas-of-bangladesh.pdf​
+5.​ Local2030 Coalition Financing Policy Brief Series.
+https://www.local2030.org/library/865/Financing-Policy-Brief-Series-Recommendations-f
+or-FfD4-Local-Finance-is-Development-Finance.pdf​
+6.​ QuantAIntelligence Generative AI tools transform urban policy development (example).
+https://quantaintelligence.ai/2024/09/07/technology/generative-ai-tools-transform-urbanpolicy-development​
+7.​ ScienceDirect AI adoption in urban planning & governance (S0169204625000441).
+https://www.sciencedirect.com/science/article/abs/pii/S0169204625000441​
+8.​ Decidim Participatory democracy platform. https://decidim.org/​
+9.​ Decidim Barcelona practical implementation. https://www.decidim.barcelona/​
+10.​BIRBAL chatbot Chandigarh Smart City launch (news).
+https://techobserver.in/news/egov/smart-cities/chandigarh-smart-city-launches-birbal-ai-c
+hatbot-to-boost-citizen-services-280028/​
+
+17
+
+11.​Jakarta Smart City Flood early-warning / dashboard.
+https://smartcity.jakarta.go.id/en/blog/teknologi-peringatan-dini-bencana-banjir-di-jakarta/​
+12.​Leveraging generative AI for urban digital twins (review).
+https://link.springer.com/article/10.1007/s44212-024-00060-w​
+13.​Urban Institute Generative AI policy & pilots.
+https://www.urban.org/urban-institutes-generative-ai-policy​
+14.​Review: Deep Learning for Slum Mapping (arXiv / review).
+https://arxiv.org/abs/2406.08031​
+15.​MDPI Remote Sensing U-Net slum mapping paper.
+https://www.mdpi.com/2072-4292/14/13/3072​
+16.​Review: Machine Learning for Short-term Flood Forecasting (Springer / Journal).
+https://link.springer.com/article/10.1007/s11269-025-04093-x​
+17.​Sentinel-2 / Copernicus open data. https://sentinel.esa.int/web/sentinel/home​
+18.​OpenStreetMap municipal vector fallback. https://www.openstreetmap.org/​
+19.​ODK / KoBoToolbox field data collection. https://getodk.org/ and
+https://www.kobotoolbox.org/​
+20.​UN SDG Localization policy briefs collection (PDF).
+https://sdgs.un.org/sites/default/files/2024-07/Inter-agency%20Policy%20Briefs%20on%
+20SDG%20Localization%20-%20Advance%20Unedited%20Version.pdf​
+21.​Notebookllm
+
+​
+
+18
+
+

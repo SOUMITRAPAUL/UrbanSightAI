@@ -1,0 +1,5 @@
+{
+  "classification_threshold": 0.52,
+  "threshold_optimization": "maximize F2 on training split",
+  "calibration": "sigmoid"
+}

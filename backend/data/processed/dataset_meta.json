@@ -1,0 +1,20 @@
+{
+  "dataset_version": "2.8.0",
+  "generated_at_utc": "2026-03-12T11:40:33.682120+00:00",
+  "boundary_source": "hdx_codab_admin4_points_voronoi",
+  "map_source": "openstreetmap_overpass_api",
+  "real_data_only": true,
+  "ward_count": 112,
+  "feature_total": 128500,
+  "layer_totals": {
+    "roads": 24164,
+    "drains": 1406,
+    "rivers": 354,
+    "waterbodies": 1364,
+    "houses": 45154,
+    "playgrounds": 459,
+    "parks": 533
+  },
+  "drain_training_rows": 5671,
+  "flood_training_rows": 2720
+}

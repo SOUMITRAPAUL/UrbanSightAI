@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap');
+
+:root {
+  --bg-1: #0b1621;
+  --bg-2: #163046;
+  --text: #f1f8fd;
+  --accent: #71d7a8;
+  --muted: #c9e2f3;
+  font-family: 'Space Grotesk', sans-serif;
+  line-height: 1.45;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 10% 20%, rgba(113, 215, 168, 0.19), transparent 40%),
+    radial-gradient(circle at 80% 0%, rgba(107, 165, 234, 0.24), transparent 42%),
+    linear-gradient(155deg, var(--bg-1), var(--bg-2));
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+button {
+  border-radius: 10px;
+  border: 1px solid rgba(185, 221, 243, 0.28);
+  padding: 0.55rem 0.95rem;
+  font-size: 0.93rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--text);
+  background: linear-gradient(135deg, rgba(67, 111, 138, 0.8), rgba(41, 71, 103, 0.7));
+  cursor: pointer;
+  transition: transform 150ms ease, filter 150ms ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+}
+
+button:disabled {
+  filter: grayscale(0.55);
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+input,
+select,
+textarea {
+  background: rgba(4, 13, 20, 0.63);
+  color: var(--text);
+  border: 1px solid rgba(178, 211, 230, 0.24);
+  border-radius: 10px;
+  padding: 0.58rem 0.7rem;
+  font-size: 0.93rem;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid rgba(119, 220, 176, 0.44);
+  border-color: rgba(119, 220, 176, 0.64);
+}

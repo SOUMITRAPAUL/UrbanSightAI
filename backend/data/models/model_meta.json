@@ -1,0 +1,10 @@
+{
+  "dataset_version": "2.8.0",
+  "trained_at_utc": "2026-03-12T11:42:13.808610+00:00",
+  "overall_trust_index": 0.910633,
+  "artifacts": [
+    "metrics.json",
+    "model_cards.json",
+    "trust_report.json"
+  ]
+}

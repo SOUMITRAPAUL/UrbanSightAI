@@ -1,0 +1,6 @@
+{
+  "input_size": 64,
+  "model": "MiniUNet",
+  "epochs": 6,
+  "threshold": 0.5
+}

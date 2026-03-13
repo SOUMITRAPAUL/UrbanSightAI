@@ -1,0 +1,8 @@
+{
+  "quantile_bounds": [
+    0.1,
+    0.9
+  ],
+  "conformal_interval_quantile": 0.9,
+  "conformal_residual_width": 0.089182
+}

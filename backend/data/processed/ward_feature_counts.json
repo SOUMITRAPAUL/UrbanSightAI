@@ -1,0 +1,1010 @@
+{
+  "1": {
+    "waterway": 0,
+    "highway": 821,
+    "water": 84,
+    "residential": 2,
+    "green": 1,
+    "house": 3943,
+    "playground": 7
+  },
+  "2": {
+    "waterway": 20,
+    "highway": 1687,
+    "water": 69,
+    "residential": 10,
+    "green": 7,
+    "house": 5903,
+    "playground": 25
+  },
+  "3": {
+    "waterway": 11,
+    "highway": 741,
+    "water": 43,
+    "residential": 4,
+    "green": 6,
+    "house": 1220,
+    "playground": 4
+  },
+  "4": {
+    "waterway": 6,
+    "highway": 425,
+    "water": 2,
+    "residential": 9,
+    "green": 5,
+    "house": 1083,
+    "playground": 3
+  },
+  "5": {
+    "waterway": 2,
+    "highway": 253,
+    "water": 13,
+    "residential": 1,
+    "green": 1,
+    "house": 733,
+    "playground": 8
+  },
+  "6": {
+    "waterway": 9,
+    "highway": 521,
+    "water": 2,
+    "residential": 3,
+    "green": 6,
+    "house": 2293,
+    "playground": 7
+  },
+  "7": {
+    "waterway": 16,
+    "highway": 540,
+    "water": 47,
+    "residential": 8,
+    "green": 5,
+    "house": 1657,
+    "playground": 3
+  },
+  "8": {
+    "waterway": 2,
+    "highway": 538,
+    "water": 2,
+    "residential": 4,
+    "green": 3,
+    "house": 1153,
+    "playground": 9
+  },
+  "9": {
+    "waterway": 14,
+    "highway": 286,
+    "water": 31,
+    "residential": 9,
+    "green": 5,
+    "house": 826,
+    "playground": 6
+  },
+  "10": {
+    "waterway": 4,
+    "highway": 321,
+    "water": 25,
+    "residential": 4,
+    "green": 1,
+    "house": 1781,
+    "playground": 4
+  },
+  "11": {
+    "waterway": 7,
+    "highway": 310,
+    "water": 3,
+    "residential": 2,
+    "green": 1,
+    "house": 801,
+    "playground": 8
+  },
+  "12": {
+    "waterway": 3,
+    "highway": 434,
+    "water": 7,
+    "residential": 4,
+    "green": 3,
+    "house": 865,
+    "playground": 5
+  },
+  "13": {
+    "waterway": 1,
+    "highway": 390,
+    "water": 9,
+    "residential": 14,
+    "green": 1,
+    "house": 724,
+    "playground": 5
+  },
+  "14": {
+    "waterway": 1,
+    "highway": 365,
+    "water": 2,
+    "residential": 1,
+    "green": 0,
+    "house": 709,
+    "playground": 1
+  },
+  "15": {
+    "waterway": 0,
+    "highway": 236,
+    "water": 1,
+    "residential": 2,
+    "green": 0,
+    "house": 773,
+    "playground": 2
+  },
+  "16": {
+    "waterway": 0,
+    "highway": 270,
+    "water": 5,
+    "residential": 1,
+    "green": 0,
+    "house": 601,
+    "playground": 1
+  },
+  "17": {
+    "waterway": 3,
+    "highway": 301,
+    "water": 75,
+    "residential": 1,
+    "green": 22,
+    "house": 1018,
+    "playground": 15
+  },
+  "18": {
+    "waterway": 0,
+    "highway": 279,
+    "water": 50,
+    "residential": 0,
+    "green": 10,
+    "house": 549,
+    "playground": 15
+  },
+  "19": {
+    "waterway": 4,
+    "highway": 338,
+    "water": 68,
+    "residential": 6,
+    "green": 0,
+    "house": 895,
+    "playground": 1
+  },
+  "20": {
+    "waterway": 2,
+    "highway": 219,
+    "water": 13,
+    "residential": 1,
+    "green": 4,
+    "house": 467,
+    "playground": 9
+  },
+  "21": {
+    "waterway": 71,
+    "highway": 1238,
+    "water": 32,
+    "residential": 2,
+    "green": 1,
+    "house": 1762,
+    "playground": 4
+  },
+  "22": {
+    "waterway": 25,
+    "highway": 1251,
+    "water": 114,
+    "residential": 5,
+    "green": 1,
+    "house": 3111,
+    "playground": 5
+  },
+  "23": {
+    "waterway": 10,
+    "highway": 786,
+    "water": 20,
+    "residential": 8,
+    "green": 6,
+    "house": 1824,
+    "playground": 6
+  },
+  "24": {
+    "waterway": 1,
+    "highway": 474,
+    "water": 5,
+    "residential": 2,
+    "green": 9,
+    "house": 1558,
+    "playground": 2
+  },
+  "25": {
+    "waterway": 9,
+    "highway": 302,
+    "water": 15,
+    "residential": 6,
+    "green": 4,
+    "house": 820,
+    "playground": 3
+  },
+  "26": {
+    "waterway": 1,
+    "highway": 166,
+    "water": 4,
+    "residential": 1,
+    "green": 1,
+    "house": 289,
+    "playground": 5
+  },
+  "27": {
+    "waterway": 7,
+    "highway": 775,
+    "water": 46,
+    "residential": 2,
+    "green": 5,
+    "house": 2800,
+    "playground": 12
+  },
+  "28": {
+    "waterway": 3,
+    "highway": 435,
+    "water": 8,
+    "residential": 4,
+    "green": 9,
+    "house": 964,
+    "playground": 8
+  },
+  "29": {
+    "waterway": 0,
+    "highway": 139,
+    "water": 6,
+    "residential": 0,
+    "green": 1,
+    "house": 414,
+    "playground": 13
+  },
+  "30": {
+    "waterway": 0,
+    "highway": 201,
+    "water": 5,
+    "residential": 1,
+    "green": 3,
+    "house": 364,
+    "playground": 1
+  },
+  "31": {
+    "waterway": 4,
+    "highway": 381,
+    "water": 19,
+    "residential": 6,
+    "green": 0,
+    "house": 1452,
+    "playground": 1
+  },
+  "32": {
+    "waterway": 18,
+    "highway": 728,
+    "water": 104,
+    "residential": 22,
+    "green": 20,
+    "house": 2039,
+    "playground": 21
+  },
+  "33": {
+    "waterway": 5,
+    "highway": 134,
+    "water": 2,
+    "residential": 4,
+    "green": 0,
+    "house": 418,
+    "playground": 1
+  },
+  "34": {
+    "waterway": 8,
+    "highway": 374,
+    "water": 81,
+    "residential": 2,
+    "green": 0,
+    "house": 1391,
+    "playground": 1
+  },
+  "35": {
+    "waterway": 1,
+    "highway": 95,
+    "water": 4,
+    "residential": 0,
+    "green": 0,
+    "house": 547,
+    "playground": 2
+  },
+  "36": {
+    "waterway": 8,
+    "highway": 161,
+    "water": 7,
+    "residential": 0,
+    "green": 0,
+    "house": 364,
+    "playground": 0
+  },
+  "37": {
+    "waterway": 0,
+    "highway": 87,
+    "water": 1,
+    "residential": 2,
+    "green": 0,
+    "house": 100,
+    "playground": 2
+  },
+  "38": {
+    "waterway": 0,
+    "highway": 145,
+    "water": 4,
+    "residential": 1,
+    "green": 4,
+    "house": 111,
+    "playground": 2
+  },
+  "39": {
+    "waterway": 0,
+    "highway": 144,
+    "water": 5,
+    "residential": 2,
+    "green": 7,
+    "house": 101,
+    "playground": 10
+  },
+  "40": {
+    "waterway": 1,
+    "highway": 166,
+    "water": 2,
+    "residential": 0,
+    "green": 4,
+    "house": 279,
+    "playground": 4
+  },
+  "41": {
+    "waterway": 0,
+    "highway": 255,
+    "water": 4,
+    "residential": 5,
+    "green": 1,
+    "house": 346,
+    "playground": 8
+  },
+  "42": {
+    "waterway": 0,
+    "highway": 221,
+    "water": 3,
+    "residential": 2,
+    "green": 1,
+    "house": 266,
+    "playground": 1
+  },
+  "43": {
+    "waterway": 0,
+    "highway": 177,
+    "water": 1,
+    "residential": 2,
+    "green": 2,
+    "house": 204,
+    "playground": 0
+  },
+  "44": {
+    "waterway": 0,
+    "highway": 119,
+    "water": 1,
+    "residential": 0,
+    "green": 0,
+    "house": 302,
+    "playground": 0
+  },
+  "45": {
+    "waterway": 0,
+    "highway": 138,
+    "water": 2,
+    "residential": 0,
+    "green": 2,
+    "house": 236,
+    "playground": 3
+  },
+  "46": {
+    "waterway": 0,
+    "highway": 159,
+    "water": 0,
+    "residential": 1,
+    "green": 2,
+    "house": 379,
+    "playground": 6
+  },
+  "47": {
+    "waterway": 0,
+    "highway": 125,
+    "water": 8,
+    "residential": 1,
+    "green": 19,
+    "house": 220,
+    "playground": 3
+  },
+  "48": {
+    "waterway": 0,
+    "highway": 109,
+    "water": 8,
+    "residential": 0,
+    "green": 7,
+    "house": 31,
+    "playground": 4
+  },
+  "49": {
+    "waterway": 8,
+    "highway": 357,
+    "water": 8,
+    "residential": 3,
+    "green": 3,
+    "house": 595,
+    "playground": 14
+  },
+  "50": {
+    "waterway": 0,
+    "highway": 307,
+    "water": 0,
+    "residential": 3,
+    "green": 1,
+    "house": 698,
+    "playground": 8
+  },
+  "51": {
+    "waterway": 7,
+    "highway": 249,
+    "water": 8,
+    "residential": 1,
+    "green": 0,
+    "house": 865,
+    "playground": 2
+  },
+  "52": {
+    "waterway": 2,
+    "highway": 248,
+    "water": 1,
+    "residential": 2,
+    "green": 5,
+    "house": 603,
+    "playground": 2
+  },
+  "53": {
+    "waterway": 0,
+    "highway": 156,
+    "water": 2,
+    "residential": 0,
+    "green": 4,
+    "house": 143,
+    "playground": 9
+  },
+  "54": {
+    "waterway": 2,
+    "highway": 206,
+    "water": 1,
+    "residential": 5,
+    "green": 0,
+    "house": 641,
+    "playground": 1
+  },
+  "55": {
+    "waterway": 7,
+    "highway": 226,
+    "water": 4,
+    "residential": 6,
+    "green": 1,
+    "house": 736,
+    "playground": 1
+  },
+  "56": {
+    "waterway": 13,
+    "highway": 626,
+    "water": 15,
+    "residential": 5,
+    "green": 0,
+    "house": 2052,
+    "playground": 4
+  },
+  "57": {
+    "waterway": 0,
+    "highway": 221,
+    "water": 2,
+    "residential": 1,
+    "green": 3,
+    "house": 561,
+    "playground": 1
+  },
+  "58": {
+    "waterway": 13,
+    "highway": 278,
+    "water": 3,
+    "residential": 4,
+    "green": 1,
+    "house": 671,
+    "playground": 0
+  },
+  "59": {
+    "waterway": 0,
+    "highway": 174,
+    "water": 2,
+    "residential": 2,
+    "green": 6,
+    "house": 373,
+    "playground": 0
+  },
+  "60": {
+    "waterway": 16,
+    "highway": 406,
+    "water": 11,
+    "residential": 3,
+    "green": 6,
+    "house": 1252,
+    "playground": 3
+  },
+  "61": {
+    "waterway": 0,
+    "highway": 122,
+    "water": 0,
+    "residential": 1,
+    "green": 11,
+    "house": 126,
+    "playground": 1
+  },
+  "62": {
+    "waterway": 0,
+    "highway": 179,
+    "water": 4,
+    "residential": 1,
+    "green": 2,
+    "house": 393,
+    "playground": 2
+  },
+  "63": {
+    "waterway": 0,
+    "highway": 135,
+    "water": 1,
+    "residential": 1,
+    "green": 3,
+    "house": 313,
+    "playground": 8
+  },
+  "64": {
+    "waterway": 0,
+    "highway": 110,
+    "water": 0,
+    "residential": 1,
+    "green": 6,
+    "house": 251,
+    "playground": 1
+  },
+  "65": {
+    "waterway": 2,
+    "highway": 222,
+    "water": 8,
+    "residential": 3,
+    "green": 7,
+    "house": 162,
+    "playground": 4
+  },
+  "66": {
+    "waterway": 0,
+    "highway": 177,
+    "water": 11,
+    "residential": 14,
+    "green": 4,
+    "house": 177,
+    "playground": 6
+  },
+  "67": {
+    "waterway": 0,
+    "highway": 287,
+    "water": 5,
+    "residential": 10,
+    "green": 4,
+    "house": 424,
+    "playground": 4
+  },
+  "68": {
+    "waterway": 0,
+    "highway": 389,
+    "water": 2,
+    "residential": 40,
+    "green": 2,
+    "house": 688,
+    "playground": 8
+  },
+  "69": {
+    "waterway": 0,
+    "highway": 242,
+    "water": 7,
+    "residential": 1,
+    "green": 25,
+    "house": 65,
+    "playground": 2
+  },
+  "70": {
+    "waterway": 0,
+    "highway": 159,
+    "water": 4,
+    "residential": 10,
+    "green": 6,
+    "house": 50,
+    "playground": 14
+  },
+  "71": {
+    "waterway": 0,
+    "highway": 271,
+    "water": 7,
+    "residential": 9,
+    "green": 32,
+    "house": 197,
+    "playground": 9
+  },
+  "72": {
+    "waterway": 7,
+    "highway": 174,
+    "water": 12,
+    "residential": 2,
+    "green": 2,
+    "house": 533,
+    "playground": 0
+  },
+  "73": {
+    "waterway": 1,
+    "highway": 136,
+    "water": 2,
+    "residential": 1,
+    "green": 1,
+    "house": 497,
+    "playground": 2
+  },
+  "74": {
+    "waterway": 1,
+    "highway": 111,
+    "water": 2,
+    "residential": 0,
+    "green": 0,
+    "house": 444,
+    "playground": 4
+  },
+  "75": {
+    "waterway": 0,
+    "highway": 95,
+    "water": 0,
+    "residential": 2,
+    "green": 26,
+    "house": 175,
+    "playground": 1
+  },
+  "76": {
+    "waterway": 0,
+    "highway": 117,
+    "water": 7,
+    "residential": 7,
+    "green": 9,
+    "house": 104,
+    "playground": 11
+  },
+  "77": {
+    "waterway": 261,
+    "highway": 172,
+    "water": 2,
+    "residential": 0,
+    "green": 18,
+    "house": 273,
+    "playground": 5
+  },
+  "78": {
+    "waterway": 36,
+    "highway": 58,
+    "water": 2,
+    "residential": 1,
+    "green": 1,
+    "house": 86,
+    "playground": 3
+  },
+  "79": {
+    "waterway": 6,
+    "highway": 50,
+    "water": 1,
+    "residential": 0,
+    "green": 7,
+    "house": 196,
+    "playground": 0
+  },
+  "80": {
+    "waterway": 2,
+    "highway": 168,
+    "water": 7,
+    "residential": 0,
+    "green": 7,
+    "house": 933,
+    "playground": 1
+  },
+  "81": {
+    "waterway": 67,
+    "highway": 134,
+    "water": 0,
+    "residential": 0,
+    "green": 4,
+    "house": 432,
+    "playground": 1
+  },
+  "82": {
+    "waterway": 36,
+    "highway": 117,
+    "water": 3,
+    "residential": 0,
+    "green": 2,
+    "house": 539,
+    "playground": 0
+  },
+  "83": {
+    "waterway": 182,
+    "highway": 119,
+    "water": 0,
+    "residential": 0,
+    "green": 22,
+    "house": 202,
+    "playground": 3
+  },
+  "84": {
+    "waterway": 119,
+    "highway": 79,
+    "water": 2,
+    "residential": 0,
+    "green": 2,
+    "house": 176,
+    "playground": 1
+  },
+  "85": {
+    "waterway": 167,
+    "highway": 90,
+    "water": 0,
+    "residential": 0,
+    "green": 16,
+    "house": 222,
+    "playground": 2
+  },
+  "86": {
+    "waterway": 187,
+    "highway": 108,
+    "water": 1,
+    "residential": 0,
+    "green": 13,
+    "house": 138,
+    "playground": 0
+  },
+  "87": {
+    "waterway": 426,
+    "highway": 257,
+    "water": 1,
+    "residential": 1,
+    "green": 28,
+    "house": 382,
+    "playground": 5
+  },
+  "88": {
+    "waterway": 27,
+    "highway": 128,
+    "water": 8,
+    "residential": 2,
+    "green": 5,
+    "house": 331,
+    "playground": 0
+  },
+  "89": {
+    "waterway": 56,
+    "highway": 65,
+    "water": 1,
+    "residential": 0,
+    "green": 1,
+    "house": 248,
+    "playground": 0
+  },
+  "90": {
+    "waterway": 39,
+    "highway": 40,
+    "water": 0,
+    "residential": 0,
+    "green": 2,
+    "house": 86,
+    "playground": 0
+  },
+  "91": {
+    "waterway": 0,
+    "highway": 48,
+    "water": 0,
+    "residential": 0,
+    "green": 1,
+    "house": 173,
+    "playground": 0
+  },
+  "92": {
+    "waterway": 3,
+    "highway": 131,
+    "water": 0,
+    "residential": 0,
+    "green": 2,
+    "house": 319,
+    "playground": 1
+  },
+  "93": {
+    "waterway": 0,
+    "highway": 76,
+    "water": 1,
+    "residential": 1,
+    "green": 1,
+    "house": 362,
+    "playground": 1
+  },
+  "94": {
+    "waterway": 1,
+    "highway": 110,
+    "water": 4,
+    "residential": 33,
+    "green": 1,
+    "house": 294,
+    "playground": 6
+  },
+  "95": {
+    "waterway": 0,
+    "highway": 42,
+    "water": 0,
+    "residential": 1,
+    "green": 2,
+    "house": 92,
+    "playground": 2
+  },
+  "96": {
+    "waterway": 0,
+    "highway": 85,
+    "water": 0,
+    "residential": 1,
+    "green": 0,
+    "house": 241,
+    "playground": 0
+  },
+  "97": {
+    "waterway": 0,
+    "highway": 60,
+    "water": 0,
+    "residential": 0,
+    "green": 1,
+    "house": 167,
+    "playground": 1
+  },
+  "98": {
+    "waterway": 0,
+    "highway": 72,
+    "water": 0,
+    "residential": 0,
+    "green": 1,
+    "house": 215,
+    "playground": 3
+  },
+  "99": {
+    "waterway": 1,
+    "highway": 68,
+    "water": 0,
+    "residential": 0,
+    "green": 0,
+    "house": 210,
+    "playground": 0
+  },
+  "100": {
+    "waterway": 0,
+    "highway": 70,
+    "water": 1,
+    "residential": 2,
+    "green": 0,
+    "house": 159,
+    "playground": 0
+  },
+  "101": {
+    "waterway": 0,
+    "highway": 32,
+    "water": 1,
+    "residential": 0,
+    "green": 1,
+    "house": 110,
+    "playground": 1
+  },
+  "102": {
+    "waterway": 0,
+    "highway": 125,
+    "water": 1,
+    "residential": 6,
+    "green": 10,
+    "house": 266,
+    "playground": 3
+  },
+  "103": {
+    "waterway": 2,
+    "highway": 72,
+    "water": 1,
+    "residential": 0,
+    "green": 2,
+    "house": 146,
+    "playground": 1
+  },
+  "104": {
+    "waterway": 3,
+    "highway": 174,
+    "water": 0,
+    "residential": 0,
+    "green": 3,
+    "house": 508,
+    "playground": 1
+  },
+  "105": {
+    "waterway": 3,
+    "highway": 205,
+    "water": 7,
+    "residential": 0,
+    "green": 1,
+    "house": 521,
+    "playground": 2
+  },
+  "106": {
+    "waterway": 6,
+    "highway": 234,
+    "water": 4,
+    "residential": 0,
+    "green": 1,
+    "house": 610,
+    "playground": 1
+  },
+  "107": {
+    "waterway": 0,
+    "highway": 111,
+    "water": 2,
+    "residential": 5,
+    "green": 4,
+    "house": 338,
+    "playground": 0
+  },
+  "108": {
+    "waterway": 10,
+    "highway": 322,
+    "water": 9,
+    "residential": 0,
+    "green": 0,
+    "house": 1252,
+    "playground": 3
+  },
+  "109": {
+    "waterway": 9,
+    "highway": 437,
+    "water": 50,
+    "residential": 2,
+    "green": 3,
+    "house": 2847,
+    "playground": 0
+  },
+  "110": {
+    "waterway": 3,
+    "highway": 412,
+    "water": 1,
+    "residential": 0,
+    "green": 1,
+    "house": 2122,
+    "playground": 3
+  },
+  "111": {
+    "waterway": 0,
+    "highway": 347,
+    "water": 35,
+    "residential": 2,
+    "green": 9,
+    "house": 352,
+    "playground": 17
+  },
+  "112": {
+    "waterway": 0,
+    "highway": 267,
+    "water": 28,
+    "residential": 2,
+    "green": 1,
+    "house": 619,
+    "playground": 4
+  }
+}

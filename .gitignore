@@ -1,0 +1,10 @@
+backend/.venv/
+backend/.venv_sys/
+backend/.pytest_cache/
+backend/**/__pycache__/
+frontend/node_modules/
+frontend/dist/
+
+# Generated OSM cache files can be regenerated locally and exceed GitHub limits.
+backend/data/raw/dhaka_building_centers.json
+backend/data/raw/dhaka_osm_features*.json

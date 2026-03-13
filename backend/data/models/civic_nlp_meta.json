@@ -1,0 +1,11 @@
+{
+  "labels": [
+    "blocked_drain",
+    "flooding",
+    "road_damage",
+    "waste",
+    "water_supply"
+  ],
+  "calibration": "sigmoid",
+  "confidence_review_threshold": 0.55
+}

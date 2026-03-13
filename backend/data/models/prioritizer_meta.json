@@ -1,0 +1,6 @@
+{
+  "prediction_interval": "split-conformal residual interval",
+  "interval_quantile": 0.9,
+  "residual_quantile_width": 0.036304,
+  "group_holdout": "ward_id"
+}

@@ -1,0 +1,132 @@
+{
+  "generated_at_utc": "2026-03-12T11:42:13.807028+00:00",
+  "dataset_version": "2.8.0",
+  "overall_trust_index": 0.910633,
+  "components": [
+    {
+      "id": "prioritizer",
+      "name": "Prioritization & Decision Ranker",
+      "trust_score": 0.922,
+      "status": "good",
+      "key_metrics": {
+        "mae": 0.018591,
+        "r2": 0.91176,
+        "interval_coverage": 0.878151,
+        "permit_mae_gap": 0.001179
+      },
+      "strengths": [
+        "Group holdout by ward to reduce spatial leakage.",
+        "Uncertainty interval provided per score family."
+      ],
+      "known_risks": [
+        "Trained on pilot-scale interventions and synthetic augmentation.",
+        "Ranking confidence is weaker for unseen project categories/agencies."
+      ],
+      "recommended_controls": [
+        "Flag interventions with low rank margin for planner review.",
+        "Retrain quarterly after field execution outcomes are logged."
+      ]
+    },
+    {
+      "id": "civic_nlp",
+      "name": "Civic Intelligence NLP",
+      "trust_score": 0.9911,
+      "status": "good",
+      "key_metrics": {
+        "macro_f1": 1.0,
+        "balanced_accuracy": 1.0,
+        "ece": 0.055478,
+        "language_f1_gap": 0.0
+      },
+      "strengths": [
+        "Calibrated classifier for confidence-aware routing.",
+        "Per-language disparity checks included in training report."
+      ],
+      "known_risks": [
+        "Bangla dialect and mixed-script colloquial reports can reduce confidence.",
+        "Extremely short reports may require human validation."
+      ],
+      "recommended_controls": [
+        "Route low-confidence reports to enumerator validation queue.",
+        "Refresh language data with monthly citizen report samples."
+      ]
+    },
+    {
+      "id": "drain_monitor",
+      "name": "Drainage Blockage Monitor",
+      "trust_score": 0.8474,
+      "status": "good",
+      "key_metrics": {
+        "auc": 0.5,
+        "recall": 0.998773,
+        "f1": 0.999386,
+        "ward_recall_gap": 0.013699
+      },
+      "strengths": [
+        "Threshold tuned for recall-weighted early warning.",
+        "Ward-level robustness gap measured explicitly."
+      ],
+      "known_risks": [
+        "Severe unseen weather anomalies can shift score calibration.",
+        "Low-sensor wards rely more heavily on proxy features."
+      ],
+      "recommended_controls": [
+        "Prioritize site inspection for high-risk segments with sparse sensors.",
+        "Recalibrate threshold during monsoon peak periods."
+      ]
+    },
+    {
+      "id": "flood_risk",
+      "name": "Flood Risk Regressor",
+      "trust_score": 0.8552,
+      "status": "good",
+      "key_metrics": {
+        "mae": 0.042945,
+        "r2": 0.847413,
+        "quantile_coverage": 0.8003,
+        "bucket_mae_gap": 0.02216
+      },
+      "strengths": [
+        "Includes quantile uncertainty models for decision envelopes.",
+        "Bucket-level error diagnostics across low/medium/high risk zones."
+      ],
+      "known_risks": [
+        "Relies on proxy elevation and congestion features, not full hydraulic simulation.",
+        "Rare extreme rainfall periods may require recalibration."
+      ],
+      "recommended_controls": [
+        "Trigger manual review when uncertainty band width exceeds threshold.",
+        "Incorporate hydraulic simulation layers in future iterations."
+      ]
+    },
+    {
+      "id": "segmentation",
+      "name": "Informal Area Segmentation",
+      "trust_score": 0.9419,
+      "status": "good",
+      "key_metrics": {
+        "mean_iou": 0.928165,
+        "mean_dice": 0.962583,
+        "mean_precision": 0.932048,
+        "mean_recall": 0.995476
+      },
+      "strengths": [
+        "Segmentation quality validated with IoU and Dice.",
+        "Balanced precision/recall reporting for footprint extraction."
+      ],
+      "known_risks": [
+        "Pilot model uses synthetic-style training patches for rapid prototyping.",
+        "Boundary precision may degrade on low-contrast or clouded imagery."
+      ],
+      "recommended_controls": [
+        "Use field verification for uncertain boundary regions.",
+        "Expand training set with seasonally diverse imagery."
+      ]
+    }
+  ],
+  "monitoring_playbook": [
+    "Recompute trust report after each live data refresh batch.",
+    "Escalate components with status=needs_retraining to planner review.",
+    "Track calibration drift and group disparity every retraining cycle."
+  ]
+}
